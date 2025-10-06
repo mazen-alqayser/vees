@@ -1,0 +1,168 @@
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التوقعات | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; /* slate-100 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* slate-300 */
+            border-radius: 4px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+     <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+<main class="mr-64 pt-20 p-6">
+    <h2 class="text-3xl font-bold text-gray-700 mb-4">التوقعات</h2>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">توقعات الأرباح الشهرية (للأشهر الـ 6 القادمة)</h3>
+        <canvas id="profitForecastChart"></canvas>
+    </div>
+</main>
+<script>
+async function loadForecasts() {
+    try {
+        const response = await fetch('/api/forecasts');
+        const data = await response.json();
+
+        const ctx = document.getElementById('profitForecastChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.months,
+                datasets: [{
+                    label: 'الأرباح المتوقعة',
+                    data: data.profits,
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: false }
+                }
+            }
+        });
+    } catch (error) {
+        console.error("فشل تحميل التوقعات:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadForecasts);
+</script>
+
+</body>
+</html>

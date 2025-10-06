@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البضاعة المرتجعة | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        #searchResults { z-index: 100; }
+        .profile-menu {
+            top: 100%;
+            left: 0;
+            transform: translateX(0%);
+            z-index: 99;
+        }
+        /* لتطبيق الـ RTL على الـ Modal بشكل صحيح */
+        .modal-content {
+            text-align: right;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+
+   <aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+    <main class="mr-64 pt-20 p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-gray-700">إدارة البضاعة المرتجعة</h2>
+            <button id="addNewReturnBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors flex items-center">
+                <i class="fas fa-plus ml-2"></i> إضافة مرتجع جديد
+            </button>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="mb-4">
+                <div class="relative">
+                    <input id="tableSearchInput" type="text" placeholder="ابحث عن منتج بالاسم أو الرمز..." class="w-full bg-gray-100 border-2 border-gray-200 rounded-lg py-2 px-4 pr-10 focus:outline-none focus:border-blue-500">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-right" id="returnsTable">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">صورة المنتج</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">الرمز</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">الاسم</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">الكمية</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">سعر الشراء</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">سعر البيع (قطاعي)</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">سعر البيع (جملة)</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">الربح/الخسارة</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">سبب الارتجاع</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="returnsTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="returnModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white modal-content">
+            <div class="mt-3 text-center">
+                <h3 id="modalTitle" class="text-lg leading-6 font-medium text-gray-900">إضافة مرتجع جديد</h3>
+                <div class="mt-2 px-7 py-3">
+                    <form id="returnForm">
+                        <input type="hidden" id="returnId" name="returnId"> <div class="mb-4">
+                            <label for="imageUrl" class="block text-sm font-medium text-gray-700">صورة المنتج (رابط)</label>
+                            <input type="text" id="imageUrl" name="imageUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label for="productName" class="block text-sm font-medium text-gray-700">اسم المنتج</label>
+                            <input type="text" id="productName" name="productName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="productCode" class="block text-sm font-medium text-gray-700">الرمز</label>
+                            <input type="text" id="productCode" name="productCode" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="quantity" class="block text-sm font-medium text-gray-700">الكمية</label>
+                            <input type="number" id="quantity" name="quantity" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required min="1">
+                        </div>
+                        <div class="mb-4">
+                            <label for="buyPrice" class="block text-sm font-medium text-gray-700">سعر الشراء (ج.م)</label>
+                            <input type="number" step="0.01" id="buyPrice" name="buyPrice" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label for="retailPrice" class="block text-sm font-medium text-gray-700">سعر البيع (قطاعي) (ج.م)</label>
+                            <input type="number" step="0.01" id="retailPrice" name="retailPrice" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label for="wholesalePrice" class="block text-sm font-medium text-gray-700">سعر البيع (جملة) (ج.م)</label>
+                            <input type="number" step="0.01" id="wholesalePrice" name="wholesalePrice" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label for="reason" class="block text-sm font-medium text-gray-700">سبب الارتجاع</label>
+                            <textarea id="reason" name="reason" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="saveReturnBtn" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">حفظ</button>
+                    <button id="closeModalBtn" class="mt-2 px-4 py-2 bg-gray-200 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white modal-content">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">تأكيد الحذف</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">هل أنت متأكد أنك تريد حذف هذا المرتجع؟ لا يمكن التراجع عن هذا الإجراء.</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">حذف</button>
+                    <button id="cancelDeleteBtn" class="mt-2 px-4 py-2 bg-gray-200 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// === عناصر DOM ===
+const returnsTableBody = document.getElementById("returnsTableBody");
+const addNewReturnBtn = document.getElementById('addNewReturnBtn');
+const returnModal = document.getElementById('returnModal');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const saveReturnBtn = document.getElementById('saveReturnBtn');
+const modalTitle = document.getElementById('modalTitle');
+const returnForm = document.getElementById('returnForm');
+
+const deleteModal = document.getElementById('deleteModal');
+const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+// حقل مخفي لتخزين ID المرتجع المراد تعديله أو حذفه
+const returnIdInput = document.getElementById('returnId');
+let currentEditingRow = null; 
+
+// === وظائف التحكم في الـ Modal ===
+function openModal(mode, row = null) {
+    returnForm.reset(); // تفريغ الحقول أولاً
+
+    if (mode === "add") {
+        modalTitle.textContent = "إضافة مرتجع جديد";
+        returnIdInput.value = "";
+        currentEditingRow = null;
+    } else if (mode === "edit" && row) {
+        modalTitle.textContent = "تعديل بيانات المرتجع";
+        currentEditingRow = row;
+        const data = extractRowData(row);
+        
+        // تعبئة حقول الـ Modal ببيانات الصف
+        document.getElementById('returnId').value = data.id;
+        document.getElementById('imageUrl').value = data.imageUrl;
+        document.getElementById('productName').value = data.name;
+        document.getElementById('productCode').value = data.code;
+        document.getElementById('quantity').value = data.quantity;
+        document.getElementById('buyPrice').value = data.buyPrice;
+        document.getElementById('retailPrice').value = data.retailPrice;
+        document.getElementById('wholesalePrice').value = data.wholesalePrice;
+        document.getElementById('reason').value = data.reason;
+    }
+    returnModal.classList.remove('hidden');
+}
+
+function closeModal() {
+    returnModal.classList.add('hidden');
+    returnForm.reset();
+    currentEditingRow = null;
+    returnIdInput.value = "";
+}
+
+function openDeleteModal(id) {
+    returnIdInput.value = id;
+    deleteModal.classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    deleteModal.classList.add('hidden');
+    returnIdInput.value = "";
+}
+
+
+// وظيفة لاستخراج البيانات من صف الجدول (مفيدة للتعديل)
+function extractRowData(row) {
+    const cells = row.querySelectorAll('td');
+    return {
+        id: row.getAttribute('data-id'),
+        imageUrl: cells[0].querySelector('img').src,
+        code: cells[1].textContent,
+        name: cells[2].textContent,
+        quantity: parseInt(cells[3].textContent),
+        buyPrice: parseFloat(cells[4].textContent.replace(' ج.م', '')),
+        retailPrice: parseFloat(cells[5].textContent.replace(' ج.م', '')),
+        wholesalePrice: parseFloat(cells[6].textContent.replace(' ج.م', '')),
+        reason: cells[8].textContent
+    };
+}
+
+
+// === الربط مع Flask API (Backend Simulation) ===
+
+/**
+ * دالة لتحميل المرتجعات من الواجهة الخلفية.
+ * @async
+ */
+async function loadReturns() {
+    try {
+        // 🔥 جلب البيانات مع تضمين الكوكيز (للتأكد من أن Flask يعرف المستخدم الحالي)
+        const res = await fetch("/api/returns", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        if (!res.ok) {
+            throw new Error(`خطأ في جلب البيانات: ${res.status}`);
+        }
+
+        const data = await res.json();
+        renderReturnsTable(data);
+    } catch (err) {
+        console.error("فشل تحميل البيانات:", err);
+        // عرض رسالة خطأ للمستخدم
+        returnsTableBody.innerHTML = `
+            <tr>
+                <td colspan="10" class="text-center py-4 text-red-500">
+                    ⚠️ فشل تحميل البيانات. يرجى التأكد من تسجيل الدخول وتشغيل الخادم الخلفي.
+                </td>
+            </tr>`;
+    }
+}
+
+
+/**
+ * دالة لعرض البيانات في الجدول.
+ * @param {Array} items - قائمة المرتجعات.
+ */
+function renderReturnsTable(items) {
+    returnsTableBody.innerHTML = "";
+    items.forEach(item => {
+        // حساب الربح/الخسارة بناءً على سعر البيع القطاعي وسعر الشراء
+        const profit = (item.retail_price - item.cost_price) * item.quantity;
+        const profitText = `${profit >= 0 ? '+' : ''}${profit.toFixed(2)} ج.م`;
+        const profitClass = profit >= 0 ? 'text-green-600' : 'text-red-600';
+
+        const newRow = returnsTableBody.insertRow();
+        newRow.setAttribute('data-id', item.id);
+        newRow.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap"><img src="${item.image_url || 'https://via.placeholder.com/50'}" alt="${item.name}" class="w-12 h-12 rounded-md object-cover"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.code || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.name}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.quantity}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.cost_price.toFixed(2)} ج.م</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.retail_price.toFixed(2)} ج.م</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.wholesale_price.toFixed(2)} ج.م</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold ${profitClass}">${profitText}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.reason || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button class="edit-btn text-blue-600 hover:text-blue-900 ml-4" data-id="${item.id}"><i class="fas fa-edit"></i> تعديل</button>
+                <button class="delete-btn text-red-600 hover:text-red-900" data-id="${item.id}"><i class="fas fa-trash-alt"></i> حذف</button>
+            </td>
+        `;
+    });
+}
+
+
+/**
+ * دالة لحفظ (إضافة أو تعديل) مرتجع.
+ * @async
+ * @param {Object} data - بيانات المرتجع.
+ * @param {boolean} isEdit - هل العملية تعديل أم إضافة؟
+ * @param {string} id - ID المرتجع في حالة التعديل.
+ */
+async function saveReturn(data, isEdit = false, id = null) {
+    const url = isEdit ? `/api/returns/${id}` : "/api/returns";
+    const method = isEdit ? "PUT" : "POST";
+
+    try {
+        const res = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        
+        if (res.ok) {
+            alert(isEdit ? "✅ تم التعديل بنجاح!" : "✅ تمت الإضافة بنجاح!");
+            loadReturns();
+        } else {
+            // محاولة قراءة رسالة الخطأ من الباكند إذا أمكن
+            const errorData = await res.json().catch(() => ({ message: 'خطأ غير معروف' }));
+            alert(`❌ حدث خطأ أثناء الحفظ. حالة الخطأ: ${res.status}. الرسالة: ${errorData.message || 'يرجى مراجعة سجلات الخادم.'}`);
+        }
+    } catch (err) {
+        console.error("خطأ في الاتصال بالباكند:", err);
+        alert("❌ فشل الاتصال بالخادم. يرجى التحقق من الشبكة.");
+    }
+}
+
+/**
+ * دالة لحذف مرتجع.
+ * @async
+ * @param {string} id - ID المرتجع المراد حذفه.
+ */
+async function deleteReturn(id) {
+    try {
+        const res = await fetch(`/api/returns/${id}`, { method: "DELETE" });
+        if (res.ok) {
+            alert("✅ تم الحذف بنجاح!");
+            loadReturns();
+        } else {
+            const errorData = await res.json().catch(() => ({ message: 'خطأ غير معروف' }));
+            alert(`❌ تعذر الحذف. حالة الخطأ: ${res.status}. الرسالة: ${errorData.message || 'يرجى مراجعة سجلات الخادم.'}`);
+        }
+    } catch (err) {
+        console.error("خطأ في الاتصال بالباكند:", err);
+        alert("❌ فشل الاتصال بالخادم. يرجى التحقق من الشبكة.");
+    }
+}
+
+// === ربط الأحداث بالواجهة ===
+document.addEventListener("DOMContentLoaded", () => {
+    // تحميل البيانات عند بدء التشغيل
+    loadReturns();
+
+    // فتح Modal الإضافة
+    addNewReturnBtn.addEventListener('click', () => openModal("add"));
+    
+    // إغلاق Modal الإضافة/التعديل
+    closeModalBtn.addEventListener('click', closeModal);
+
+    // معالج حدث حفظ المرتجع (إضافة أو تعديل)
+    saveReturnBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        // جمع البيانات من النموذج
+        const data = {
+            image_url: document.getElementById('imageUrl').value || 'https://via.placeholder.com/50',
+            name: document.getElementById('productName').value,
+            code: document.getElementById('productCode').value, // رمز المنتج (ممكن استخدامه كـ ID في الباكند)
+            quantity: parseInt(document.getElementById('quantity').value),
+            cost_price: parseFloat(document.getElementById('buyPrice').value || 0),
+            retail_price: parseFloat(document.getElementById('retailPrice').value || 0),
+            wholesale_price: parseFloat(document.getElementById('wholesalePrice').value || 0),
+            reason: document.getElementById('reason').value
+        };
+
+        const id = document.getElementById('returnId').value;
+        const isEdit = !!id; // إذا كان هناك ID، فهذا يعني تعديل
+
+        // التحقق من الحقول المطلوبة
+        if (!data.name || !data.code || isNaN(data.quantity) || data.quantity < 1) {
+            alert("يرجى ملء جميع الحقول المطلوبة بشكل صحيح (الاسم، الرمز، الكمية).");
+            return;
+        }
+
+        await saveReturn(data, isEdit, id);
+        closeModal();
+    });
+
+    // معالج حدث الحذف والتعديل (باستخدام الـ Event Delegation)
+    returnsTableBody.addEventListener("click", (e) => {
+        const deleteButton = e.target.closest(".delete-btn");
+        const editButton = e.target.closest(".edit-btn");
+        
+        if (deleteButton) {
+            const id = deleteButton.getAttribute("data-id");
+            openDeleteModal(id);
+        } else if (editButton) {
+            const row = editButton.closest("tr");
+            openModal("edit", row);
+        }
+    });
+
+    // تأكيد الحذف
+    confirmDeleteBtn.addEventListener('click', async () => {
+        const idToDelete = returnIdInput.value;
+        if (idToDelete) {
+            await deleteReturn(idToDelete);
+            closeDeleteModal();
+        }
+    });
+
+    // إلغاء الحذف
+    cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+});
+</script>
+
+</body>
+</html>

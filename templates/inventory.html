@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجرد السنوي | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <!-- Header -->
+<header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+    <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>    
+    <div class="flex items-center space-x-4">
+        
+        <div class="relative">
+            <input id="searchInput" type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <div id="searchResults" class="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg hidden">
+                <ul id="resultsList" class="py-2">
+                    </ul>
+            </div>
+        </div>
+        
+        <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+        
+        <div class="relative">
+            <div class="profile-frame">
+                <img id="profileImage" src="https://github.com/mazen-alqayser/a/blob/main/527433485_4614807792079064_709098891592975352_n.jpg?raw=true" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+            <div id="profileMenu" class="profile-menu absolute mt-3 w-48 bg-white rounded-lg shadow-xl hidden">
+                <div class="p-2">
+                    <a href="{{ url_for('logout') }}" id="logoutButton" class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                        <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
+                    </a>
+                    <button class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                        <i class="fas fa-info-circle ml-2"></i>من نحن
+                    </button>
+                    <button id="termsButton" class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                        <i class="fas fa-file-alt ml-2"></i>شروط الاستخدام
+                    </button>
+                    <a href="mailto:support@example.com" class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                        <i class="fas fa-headset ml-2"></i>تواصل مع الدعم
+                    </a>
+                    <div class="px-4 py-2 text-xs text-gray-500 text-right border-t pt-2 mt-2">
+                        رقم وهمي: <a href="tel:+201001234567" class="text-blue-500 hover:underline">+20 100 123 4567</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+    <!-- Main Content -->
+    <main class="mr-64 pt-20 p-6">
+        <h2 class="text-3xl font-bold text-gray-700 mb-4">الجرد السنوي</h2>
+        
+        <!-- Low Stock Alert -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg p-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-2xl ml-3"></i>
+                    <p><strong>تنبيه:</strong> <span id="lowStockCount">0</span> منتجات مخزونها منخفض.</p>
+                </div>
+                <button id="viewLowStockBtn" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded-lg text-sm">عرض</button>
+            </div>
+        </div>
+
+        <!-- Inventory Calculation Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">حساب الجرد</h3>
+            
+            <!-- Date Filter -->
+            <div class="mb-4">
+                <label for="startDate" class="block text-sm font-medium text-gray-700">من تاريخ:</label>
+                <input type="date" id="startDate" class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            </div>
+            <div class="mb-4">
+                <label for="endDate" class="block text-sm font-medium text-gray-700">إلى تاريخ:</label>
+                <input type="date" id="endDate" class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            </div>
+
+            <!-- Inventory Buttons -->
+            <div class="flex flex-wrap gap-4 mb-4">
+                <button id="costPriceBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">جرد بسعر الأصل</button>
+                <button id="wholesalePriceBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">جرد بسعر الجملة</button>
+                <button id="retailPriceBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">جرد بسعر القطاعي</button>
+            </div>
+            
+            <!-- Results Display -->
+            <div id="resultsContainer" class="bg-gray-50 rounded-lg p-4 mt-4 hidden">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">نتائج الجرد:</h4>
+                <p><strong>إجمالي رأس المال:</strong> <span id="totalCapital">0</span> ريال</p>
+                <p><strong>إجمالي الأرباح / الخسائر:</strong> <span id="profitLoss">0</span> ريال</p>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">قائمة المنتجات</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">المنتج</th>
+                            <th class="py-3 px-6 text-left">الرمز</th>
+                            <th class="py-3 px-6 text-left">الكمية المتاحة</th>
+                            <th class="py-3 px-6 text-left">سعر الوحدة (ريال)</th>
+                            <th class="py-3 px-6 text-left">سعر الجملة (ريال)</th>
+                            <th class="py-3 px-6 text-left">سعر القطاعي (ريال)</th>
+                            <th class="py-3 px-6 text-left">قيمة المخزون الإجمالية (ريال)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody" class="text-gray-600 text-sm font-light">
+                        <!-- Product rows will be injected here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Modal for Low Stock Products -->
+    <div id="lowStockModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div class="bg-white w-11/12 md:max-w-md mx-auto rounded-lg shadow-lg z-50 overflow-y-auto p-6">
+            <div class="flex justify-between items-center pb-3">
+                <p class="text-xl font-bold text-gray-700">المنتجات ذات المخزون المنخفض</p>
+                <div class="modal-close cursor-pointer z-50" onclick="closeModal()">
+                    <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                        <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div id="lowStockList" class="overflow-x-auto">
+                <!-- Low stock products will be injected here -->
+            </div>
+        </div>
+    </div>
+<script>
+    // **متغير عام لتخزين بيانات المنتجات المجلوبة من الـ Backend**
+    let productsData = []; 
+    const LOW_STOCK_THRESHOLD = 10;
+    
+    // العناصر المطلوبة من الصفحة
+    const productsTableBody = document.getElementById('productsTableBody');
+    const searchInput = document.getElementById('searchInput');
+    const viewLowStockBtn = document.getElementById('viewLowStockBtn');
+    const lowStockCount = document.getElementById('lowStockCount');
+    const lowStockModal = document.getElementById('lowStockModal');
+    const lowStockList = document.getElementById('lowStockList');
+    const costPriceBtn = document.getElementById('costPriceBtn');
+    const wholesalePriceBtn = document.getElementById('wholesalePriceBtn');
+    const retailPriceBtn = document.getElementById('retailPriceBtn');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const totalCapitalSpan = document.getElementById('totalCapital');
+    const profitLossSpan = document.getElementById('profitLoss');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+
+    // ------------------------------------------------------------------
+    // A. دالة جلب المنتجات من Flask API (GET /api/products)
+    // ------------------------------------------------------------------
+    async function fetchProducts() {
+        try {
+            // نستخدم نفس مسار API الذي يجلب المنتجات الخاصة بالمستخدم الحالي
+            const response = await fetch('/api/products'); 
+
+            if (response.status === 401) {
+                // إذا لم يكن المستخدم مسجلاً
+                window.location.href = '/login'; 
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'فشل في جلب المنتجات.');
+            }
+
+            productsData = await response.json();
+            renderProducts(productsData);
+            updateLowStockCount();
+
+        } catch (error) {
+            console.error('Fetch error:', error);
+            alert(`خطأ في جلب البيانات: ${error.message}`);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // B. دالة عرض المنتجات في الجدول (بشكل مفصل)
+    // ------------------------------------------------------------------
+    function renderProducts(products) {
+        productsTableBody.innerHTML = '';
+        products.forEach(product => {
+            const quantity = product.quantity_in_stock || 0;
+            const costPrice = product.cost_price || 0;
+            const wholesalePrice = product.wholesale_price || 0;
+            const retailPrice = product.retail_price || 0;
+
+            // حساب قيمة المخزون الإجمالية (دائماً بسعر التكلفة/الشراء)
+            const totalInventoryValue = quantity * costPrice; 
+            
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-200 hover:bg-gray-100';
+            row.innerHTML = `
+                <td class="py-3 px-6 text-left">${product.name}</td>
+                <td class="py-3 px-6 text-left">${product.barcode || product.code || 'N/A'}</td>
+                <td class="py-3 px-6 text-left ${quantity < LOW_STOCK_THRESHOLD ? 'text-red-500 font-bold' : ''}">${quantity.toLocaleString()}</td>
+                <td class="py-3 px-6 text-left">${costPrice.toLocaleString()} ريال</td>
+                <td class="py-3 px-6 text-left">${wholesalePrice.toLocaleString()} ريال</td>
+                <td class="py-3 px-6 text-left">${retailPrice.toLocaleString()} ريال</td>
+                <td class="py-3 px-6 text-left font-semibold">${totalInventoryValue.toLocaleString()} ريال</td>
+            `;
+            productsTableBody.appendChild(row);
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // C. دالة حساب الجرد بناءً على نوع السعر والتاريخ
+    // ------------------------------------------------------------------
+    async function calculateInventory(priceType) {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+        
+        // **ملاحظة: في الـ Backend يجب إنشاء API جديد لهذا الغرض.**
+        // لأنه يتطلب جلب بيانات المبيعات والمخزون حتى تاريخ معين.
+        // نفترض مؤقتًا أن الجرد الحالي هو للمخزون الحالي المتوفر (المنتجات التي تم جلبها بالفعل).
+        
+        let totalCapital = 0;
+        let totalProfitOrPotentialProfit = 0;
+        
+        // إذا لم يكن هناك تاريخ محدد، نحسب الجرد للمخزون الحالي
+        productsData.forEach(product => {
+            const quantity = product.quantity_in_stock || 0;
+            const costPrice = product.cost_price || 0;
+            const price = 
+                priceType === 'cost' ? costPrice : 
+                priceType === 'wholesale' ? product.wholesale_price || 0 :
+                priceType === 'retail' ? product.retail_price || 0 : costPrice;
+
+            // إجمالي رأس المال (القيمة الفعلية للمخزون الحالي بسعر التكلفة)
+            totalCapital += quantity * costPrice; 
+            
+            // إجمالي الربح المحتمل (القيمة البيعية المتوقعة - قيمة التكلفة)
+            totalProfitOrPotentialProfit += quantity * (price - costPrice);
+        });
+
+        // لعرض نتيجة منطقية
+        const capitalLabel = 'إجمالي قيمة المخزون الحالي بسعر التكلفة:';
+        let profitLabel = 'إجمالي الربح/الخسارة المحتمل بناءً على ';
+
+        if (priceType === 'cost') profitLabel = 'الربح المحتمل: 0 (حساب بسعر التكلفة)';
+        else if (priceType === 'wholesale') profitLabel += 'سعر الجملة:';
+        else if (priceType === 'retail') profitLabel += 'سعر القطاعي:';
+        
+        totalCapitalSpan.textContent = totalCapital.toLocaleString() + ' ريال';
+        profitLossSpan.textContent = totalProfitOrPotentialProfit.toLocaleString() + ' ريال';
+        
+        // تعديل النتائج لتناسب نوع الجرد
+        resultsContainer.children[1].innerHTML = `<strong>${capitalLabel}</strong> <span id="totalCapital">${totalCapitalSpan.textContent}</span>`;
+        resultsContainer.children[2].innerHTML = `<strong>${profitLabel}</strong> <span id="profitLoss">${profitLossSpan.textContent}</span>`;
+        
+        resultsContainer.classList.remove('hidden');
+    }
+
+    // ------------------------------------------------------------------
+    // D. وظائف المخزون المنخفض
+    // ------------------------------------------------------------------
+    function updateLowStockCount() {
+        const lowStockProducts = productsData.filter(p => (p.quantity_in_stock || 0) < LOW_STOCK_THRESHOLD);
+        lowStockCount.textContent = lowStockProducts.length;
+    }
+
+    function showLowStockModal() {
+        const lowStockProducts = productsData.filter(p => (p.quantity_in_stock || 0) < LOW_STOCK_THRESHOLD);
+        lowStockList.innerHTML = '';
+        if (lowStockProducts.length > 0) {
+            lowStockProducts.forEach(product => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'bg-red-50 rounded-lg p-3 mb-2 border border-red-200';
+                itemDiv.innerHTML = `
+                    <p class="font-bold text-md text-red-700">${product.name} (${product.barcode || 'N/A'})</p>
+                    <p><strong>الكمية المتاحة:</strong> <span class="text-red-500 font-bold">${product.quantity_in_stock}</span></p>
+                `;
+                lowStockList.appendChild(itemDiv);
+            });
+        } else {
+            lowStockList.innerHTML = '<p class="text-gray-500 text-center">لا يوجد منتجات بمخزون منخفض.</p>';
+        }
+        lowStockModal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        lowStockModal.classList.add('hidden');
+    }
+
+    // ------------------------------------------------------------------
+    // E. الأحداث وتشغيل البداية
+    // ------------------------------------------------------------------
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredProducts = productsData.filter(product => 
+            product.name.toLowerCase().includes(searchTerm) ||
+            (product.barcode && product.barcode.toLowerCase().includes(searchTerm))
+        );
+        renderProducts(filteredProducts);
+    });
+
+    viewLowStockBtn.addEventListener('click', showLowStockModal);
+    costPriceBtn.addEventListener('click', () => calculateInventory('cost'));
+    wholesalePriceBtn.addEventListener('click', () => calculateInventory('wholesale'));
+    retailPriceBtn.addEventListener('click', () => calculateInventory('retail'));
+    
+    // إغلاق المودال عند النقر على الأيقونة
+    document.querySelector('.modal-close').addEventListener('click', closeModal);
+
+    // جلب المنتجات عند تحميل الصفحة
+    window.addEventListener('load', fetchProducts);
+</script>
+</body>
+</html>

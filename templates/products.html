@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المنتجات  | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .modal { display: none; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+       <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+    <main class="mr-64 pt-20 p-6">
+        <h2 class="text-3xl font-bold text-gray-700 mb-4">إدارة المنتجات</h2>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-700">قائمة المنتجات</h3>
+                <button id="addProductBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    <i class="fas fa-plus ml-2"></i>إضافة منتج جديد
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">صورة المنتج</th>
+                            <th class="py-3 px-6 text-left">الرمز</th>
+                            <th class="py-3 px-6 text-left">الاسم</th>
+                            <th class="py-3 px-6 text-left">الكمية</th>
+                            <th class="py-3 px-6 text-left">سعر الشراء</th>
+                            <th class="py-3 px-6 text-left">سعر البيع (قطاعي)</th>
+                            <th class="py-3 px-6 text-left">سعر البيع (جملة)</th>
+                            <th class="py-3 px-6 text-left">الربح/الخسارة</th>
+                            <th class="py-3 px-6 text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody" class="text-gray-600 text-sm font-light">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="product-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 modal">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg relative">
+            <button onclick="closeModal('product-form-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 id="form-modal-title" class="text-2xl font-bold text-gray-800 mb-6 text-center"></h3>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <div class="mb-4">
+                    <label for="form-image-url" class="block text-gray-700 font-bold mb-2">صورة المنتج</label>
+                    <input type="text" id="form-image-url" placeholder="رابط URL للصورة" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="form-barcode" class="block text-gray-700 font-bold mb-2">الرمز (باركود)</label>
+                    <input type="text" id="form-barcode" placeholder="أدخل الرمز أو الباركود" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="form-name" class="block text-gray-700 font-bold mb-2">اسم المنتج</label>
+                    <input type="text" id="form-name" placeholder="اسم المنتج" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="form-stock" class="block text-gray-700 font-bold mb-2">الكمية المتوفرة</label>
+                    <input type="number" id="form-stock" placeholder="الكمية" min="0" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label for="form-purchase-price" class="block text-gray-700 font-bold mb-2">سعر الشراء</label>
+                        <input type="number" id="form-purchase-price" step="0.01" min="0" placeholder="سعر الشراء" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="form-retail-price" class="block text-gray-700 font-bold mb-2">سعر البيع (قطاعي)</label>
+                        <input type="number" id="form-retail-price" step="0.01" min="0" placeholder="سعر البيع (قطاعي)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="form-wholesale-price" class="block text-gray-700 font-bold mb-2">سعر البيع (جملة)</label>
+                        <input type="number" id="form-wholesale-price" step="0.01" min="0" placeholder="سعر البيع (جملة)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 mt-6">
+                    <button type="button" onclick="closeModal('product-form-modal')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">إلغاء</button>
+                    <button type="submit" id="form-submit-button" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 modal">
+        <div class="relative p-8 bg-white w-96 max-w-sm mx-auto rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-bold mb-4">تأكيد الحذف</h3>
+            <p class="mb-4">هل أنت متأكد أنك تريد حذف هذا المنتج؟</p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">حذف</button>
+                <button type="button" onclick="closeModal('delete-modal')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    // **حذف إعدادات Supabase لأننا نستخدم Flask Backend**
+    // const SUPABASE_URL = '...'; 
+    // const SUPABASE_ANON_KEY = '...';
+    // const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); 
+
+    let productsData = [];
+    let currentProductId = null; // نستخدم ID بدلاً من SKU
+
+    const productsTableBody = document.getElementById('productsTableBody');
+    const searchInput = document.getElementById('searchInput');
+    const addProductBtn = document.getElementById('addProductBtn');
+    const productFormModal = document.getElementById('product-form-modal');
+    const deleteModal = document.getElementById('delete-modal');
+    const formSubmitButton = document.getElementById('form-submit-button');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const productForm = document.getElementById('product-form');
+    const modalTitle = document.getElementById('form-modal-title');
+
+    // حقول النموذج
+    const productIdInput = document.getElementById('product-id');
+    const productImageInput = document.getElementById('form-image-url');
+    const productBarcodeInput = document.getElementById('form-barcode');
+    const productNameInput = document.getElementById('form-name');
+    const productQuantityInput = document.getElementById('form-stock');
+    const productPurchasePriceInput = document.getElementById('form-purchase-price');
+    const productRetailPriceInput = document.getElementById('form-retail-price');
+    const productWholesalePriceInput = document.getElementById('form-wholesale-price');
+
+    // دالة مساعدة لإظهار الإشعارات (اختياري)
+    function showAlert(message, type = 'success') {
+        console.log(`${type}: ${message}`);
+        // يمكنك هنا إضافة عنصر HTML مؤقت لإظهار الرسالة للمستخدم
+    }
+
+    // Function to show/hide modals
+    function showModal(modal) {
+        modal.style.display = 'flex';
+    }
+    function hideModal(modal) {
+        modal.style.display = 'none';
+    }
+    
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            hideModal(modal);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // A. دالة جلب المنتجات من Flask API (GET /api/products)
+    // ------------------------------------------------------------------
+    async function fetchProducts() {
+        try {
+            const response = await fetch('/api/products');
+            
+            // تحقق من حالة تسجيل الدخول أولاً
+            if (response.status === 401) {
+                window.location.href = '/login'; // توجيه لتسجيل الدخول
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'فشل في جلب المنتجات.');
+            }
+
+            productsData = await response.json();
+            renderProducts(productsData);
+
+        } catch (error) {
+            showAlert(`خطأ في جلب البيانات: ${error.message}`, 'error');
+        }
+    }
+    
+    // ------------------------------------------------------------------
+    // B. دالة عرض المنتجات في الجدول
+    // ------------------------------------------------------------------
+    function renderProducts(productsToRender) {
+        productsTableBody.innerHTML = '';
+        productsToRender.forEach(product => {
+            // ملاحظة: الحقول في قاعدة البيانات هي: cost_price, retail_price, wholesale_price
+            const costPrice = product.cost_price || 0;
+            const retailPrice = product.retail_price || 0;
+            const quantity = product.quantity_in_stock || 0;
+
+            const profit = (retailPrice - costPrice) * quantity;
+            const profitText = profit >= 0 ? `${profit.toLocaleString()} ريال` : `(${Math.abs(profit).toLocaleString()}) ريال`;
+            const profitClass = profit >= 0 ? 'text-green-600' : 'text-red-600';
+            
+            const row = document.createElement('tr');
+            row.classList.add('border-b', 'border-gray-200', 'hover:bg-gray-100');
+            row.innerHTML = `
+                <td class="py-3 px-6 text-left"><img src="${product.image_url || 'https://placehold.co/50x50/e2e8f0/000000?text=Product'}" alt="${product.name}" class="rounded-full w-10 h-10"></td>
+                <td class="py-3 px-6 text-left">${product.barcode || product.code || 'N/A'}</td>
+                <td class="py-3 px-6 text-left">${product.name}</td>
+                <td class="py-3 px-6 text-left">${quantity.toLocaleString()}</td>
+                <td class="py-3 px-6 text-left">${costPrice.toLocaleString()} ريال</td>
+                <td class="py-3 px-6 text-left">${retailPrice.toLocaleString()} ريال</td>
+                <td class="py-3 px-6 text-left">${(product.wholesale_price || 0).toLocaleString()} ريال</td>
+                <td class="py-3 px-6 text-left ${profitClass}">${profitText}</td>
+                <td class="py-3 px-6 text-center">
+                    <div class="flex item-center justify-center">
+                        <button data-id="${product.id}" class="edit-btn w-4 ml-2 transform hover:text-blue-500 hover:scale-110"><i class="fas fa-edit"></i></button>
+                        <button data-id="${product.id}" class="delete-btn w-4 ml-2 transform hover:text-red-500 hover:scale-110"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </td>
+            `;
+            productsTableBody.appendChild(row);
+        });
+    }
+
+
+    // ------------------------------------------------------------------
+    // C. معالجة فتح وإغلاق النموذج
+    // ------------------------------------------------------------------
+    addProductBtn.addEventListener('click', () => {
+        modalTitle.textContent = 'إضافة منتج جديد';
+        formSubmitButton.textContent = 'حفظ المنتج';
+        productForm.reset();
+        productIdInput.value = ''; // تأكد من تفريغ ID
+        productBarcodeInput.disabled = false;
+        showModal(productFormModal); // الآن يجب أن تظهر القائمة المنبثقة
+    });
+
+    // ------------------------------------------------------------------
+    // D. إرسال النموذج (إضافة أو تعديل) - POST/PUT /api/products
+    // ------------------------------------------------------------------
+    productForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const isEditing = productIdInput.value !== '';
+        const url = isEditing ? `/api/products/${productIdInput.value}` : '/api/products';
+        const method = isEditing ? 'PUT' : 'POST';
+
+        const productData = {
+            name: productNameInput.value,
+            barcode: productBarcodeInput.value,
+            image_url: productImageInput.value || null,
+            quantity_in_stock: parseInt(productQuantityInput.value),
+            cost_price: parseFloat(productPurchasePriceInput.value),
+            retail_price: parseFloat(productRetailPriceInput.value),
+            wholesale_price: parseFloat(productWholesalePriceInput.value) || null
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || `فشل في ${isEditing ? 'تعديل' : 'إضافة'} المنتج.`);
+            }
+            
+            showAlert(`تم ${isEditing ? 'تعديل' : 'إضافة'} المنتج بنجاح!`);
+            hideModal(productFormModal);
+            await fetchProducts(); // تحديث القائمة
+
+        } catch (error) {
+            showAlert(`خطأ: ${error.message}`, 'error');
+        }
+    });
+
+
+    // ------------------------------------------------------------------
+    // E. معالجة التعديل والحذف (Event Delegation)
+    // ------------------------------------------------------------------
+    productsTableBody.addEventListener('click', (e) => {
+        const button = e.target.closest('button');
+        if (!button) return;
+
+        const id = button.dataset.id;
+        
+        if (button.classList.contains('edit-btn')) {
+            const product = productsData.find(p => p.id == id);
+            if (product) {
+                modalTitle.textContent = 'تعديل المنتج';
+                formSubmitButton.textContent = 'حفظ التعديلات';
+                
+                // ملء الحقول (تطابق أسماء الحقول في الـ Backend)
+                productIdInput.value = product.id;
+                productImageInput.value = product.image_url || '';
+                productBarcodeInput.value = product.barcode || '';
+                productBarcodeInput.disabled = true; // نمنع تعديل الباركود
+                productNameInput.value = product.name;
+                productQuantityInput.value = product.quantity_in_stock;
+                productPurchasePriceInput.value = product.cost_price;
+                productRetailPriceInput.value = product.retail_price;
+                productWholesalePriceInput.value = product.wholesale_price || '';
+                
+                showModal(productFormModal);
+            }
+        } else if (button.classList.contains('delete-btn')) {
+            currentProductId = id;
+            showModal(deleteModal);
+        }
+    });
+
+    // ------------------------------------------------------------------
+    // F. تأكيد الحذف (DELETE /api/products/<int:id>)
+    // ------------------------------------------------------------------
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (currentProductId) {
+            try {
+                const response = await fetch(`/api/products/${currentProductId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error || 'فشل في حذف المنتج.');
+                }
+
+                showAlert('تم حذف المنتج بنجاح.');
+                hideModal(deleteModal);
+                currentProductId = null;
+                await fetchProducts();
+
+            } catch (error) {
+                showAlert(`خطأ: ${error.message}`, 'error');
+            }
+        }
+    });
+
+    // ------------------------------------------------------------------
+    // G. تشغيل جلب المنتجات عند تحميل الصفحة
+    // ------------------------------------------------------------------
+    window.addEventListener('load', fetchProducts);
+
+    // Search functionality - (المنطق سليم، فقط تم تغيير الحقول)
+    searchInput.addEventListener('keyup', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredProducts = productsData.filter(product => 
+            product.name.toLowerCase().includes(searchTerm) || 
+            (product.barcode && product.barcode.toLowerCase().includes(searchTerm)) ||
+            (product.code && product.code.toLowerCase().includes(searchTerm))
+        );
+        renderProducts(filteredProducts);
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === productFormModal) {
+            hideModal(productFormModal);
+        }
+        if (e.target === deleteModal) {
+            hideModal(deleteModal);
+        }
+    });
+</script>
+</body>
+</html>

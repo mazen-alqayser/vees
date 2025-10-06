@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* Ensure search results are on top */
+        #searchResults {
+            z-index: 100;
+        }
+        /* Custom styles for the dropdown menu */
+        .profile-menu {
+            top: 100%;
+            left: 0; /* Position the dropdown to the left relative to the profile image container */
+            transform: translateX(0%);
+            z-index: 99;
+        }
+    
+/* تنسيق الإطار الدائري الخارجي  */
+.profile-frame {
+  width: 50px; /* اجعل العرض أكبر بقليل من الصورة  */
+  height: 50px; /* اجعل الارتفاع أكبر بقليل من الصورة  */
+  border-radius: 50%; /* لجعله دائريًا  */
+  padding: 5px; /* لإضافة مساحة بين الإطار والصورة  */
+  background: conic-gradient(from 180deg at 50% 50%, #0000 0deg, #0238E5 360deg); /* تأثير التدرج اللوني  */
+  animation: spin 3s linear infinite; /* تطبيق تأثير الدوران  */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* تأثير الدوران (keyframes)  */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+        <h1 class="text-2xl font-bold text-gray-800">البرنامج المحاسبي Vees </h1>
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input id="searchInput" type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <div id="searchResults" class="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg hidden">
+                    <ul id="resultsList" class="py-2">
+                        </ul>
+                </div>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+           <div class="relative">
+    <div class="profile-frame">
+        <img id="profileImage" src="https://github.com/mazen-alqayser/a/blob/main/527433485_4614807792079064_709098891592975352_n.jpg?raw=true" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+    </div>
+    <div id="profileMenu" class="profile-menu absolute mt-3 w-48 bg-white rounded-lg shadow-xl hidden">
+        <div class="p-2">
+           <a href="{{ url_for('logout') }}" id="logoutButton" class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+    <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
+           </a>
+            <!-- زر من نحن -->
+<button id="aboutBtn" class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+    <i class="fas fa-info-circle ml-2"></i>من نحن
+</button>
+
+<!-- النافذة المنبثقة -->
+<div id="aboutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-96 max-h-96 overflow-y-auto p-6 relative">
+        <button id="closeModal" class="absolute top-2 left-2 text-gray-500 hover:text-gray-800 text-lg font-bold">&times;</button>
+        <h3 class="text-xl font-semibold mb-4">من نحن؟</h3>
+        <p class="mb-4">
+            تقدم منصة <strong>Vees</strong> حلولاً متكاملة لإدارة الشؤون المالية والمحاسبية لكافة المؤسسات والشركات الناشئة والأفراد. هدفنا هو تبسيط العمليات المعقدة وتحويلها إلى بيانات دقيقة وسهلة الفهم، بما يمكّن الشركات من اتخاذ قرارات مالية حكيمة وسريعة.
+        </p>
+
+        <h4 class="text-lg font-semibold mb-2">رسالتنا</h4>
+        <p class="mb-4">
+            نسعى إلى تطوير أدوات مبتكرة تخدم المؤسسات والأفراد، وتدعم تحقيق أعلى مستويات الكفاءة والشفافية في الإدارة المالية وكافة المجالات.
+        </p>
+
+        <h4 class="text-lg font-semibold mb-2">تطوير البرنامج</h4>
+        <p class="mb-4">
+            تم تطوير البرنامج بواسطة المهندس مازن القيصر، إيمانًا منا بضرورة تقديم حلول تسهم في خدمة البلاد والعباد، خاصة في الوطن العربي والإفريقي والإقليم عامة.
+        </p>
+
+        <h4 class="text-lg font-semibold mb-2">رؤيتنا</h4>
+        <p>
+            أن نكون الشريك المالي الأكثر ثقة للشركات الناشئة والكبيرة في المنطقة.
+        </p>
+    </div>
+</div>
+
+<!-- JavaScript للتحكم بالنافذة -->
+<script>
+    const aboutBtn = document.getElementById('aboutBtn');
+    const aboutModal = document.getElementById('aboutModal');
+    const closeModal = document.getElementById('closeModal');
+
+    aboutBtn.addEventListener('click', () => {
+        aboutModal.classList.remove('hidden');
+        aboutModal.classList.add('flex');
+    });
+
+    closeModal.addEventListener('click', () => {
+        aboutModal.classList.add('hidden');
+        aboutModal.classList.remove('flex');
+    });
+
+    // اغلاق النافذة عند النقر خارجها
+    aboutModal.addEventListener('click', (e) => {
+        if (e.target === aboutModal) {
+            aboutModal.classList.add('hidden');
+            aboutModal.classList.remove('flex');
+        }
+    });
+</script>
+
+            <button id="termsButton" class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                <i class="fas fa-file-alt ml-2"></i>شروط الاستخدام
+            </button>
+          <a href="mailto:mazen.alqayser@icloud.com" 
+   class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+    <i class="fas fa-headset ml-2"></i>تواصل مع الدعم
+</a>
+
+            <div class="px-4 py-2 text-xs text-gray-500 text-right border-t pt-2 mt-2">
+                رقم الدعم: <a href="tel:+201001234567" class="text-blue-500 hover:underline">+20 1124592083</a>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </header>
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+<main class="mr-64 pt-20 p-6">
+    <h2 class="text-3xl font-bold text-gray-700 mb-4">نظرة عامة</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- أرباح -->
+        <a href="{{ url_for('profit_loss') }}" class="bg-white rounded-lg shadow-md p-6 block hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg text-gray-500">الأرباح الشهرية</h3>
+                <i class="fas fa-dollar-sign text-blue-500 text-2xl"></i>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 mt-4">
+                <div class="bg-blue-500 h-3 rounded-full w-3/4"></div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">TRADEX</p>
+        </a>
+
+        <!-- الموظفين -->
+        <a href="{{ url_for('employees') }}" class="bg-white rounded-lg shadow-md p-6 block hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg text-gray-500">إجمالي الموظفين</h3>
+                <i class="fas fa-users text-green-500 text-2xl"></i>
+            </div>
+            <div class="flex -space-x-3 mt-4">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://raw.githubusercontent.com/mazen-alqayser/a/main/IMG_7990%5B1%5D%20-%20Copy.JPG">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://i.pravatar.cc/40?img=3">
+                <span class="flex items-center justify-center w-10 h-10 bg-green-100 text-green-600 rounded-full text-sm">+5</span>
+            </div>
+        </a>
+
+        <!-- المنتجات -->
+        <a href="{{ url_for('products') }}" class="bg-white rounded-lg shadow-md p-6 block hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg text-gray-500">المنتجات في المخزون</h3>
+                <i class="fas fa-cubes text-yellow-500 text-2xl"></i>
+            </div>
+            <div class="grid grid-cols-5 gap-2 mt-4">
+                <i class="fas fa-box text-yellow-400"></i>
+                <i class="fas fa-box text-yellow-400"></i>
+                <i class="fas fa-box text-yellow-400"></i>
+                <i class="fas fa-box text-yellow-400"></i>
+                <i class="fas fa-box text-gray-300"></i>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">JINJA_1</p>
+        </a>
+
+        <!-- العملاء -->
+        <a href="{{ url_for('customers') }}" class="bg-white rounded-lg shadow-md p-6 block hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg text-gray-500">العملاء الأساسيين والديون</h3>
+                <i class="fas fa-handshake text-red-500 text-2xl"></i>
+            </div>
+            <div class="flex space-x-2 mt-4 justify-center">
+                <i class="fas fa-user-check text-red-400 animate-pulse"></i>
+                <i class="fas fa-user-check text-red-400 animate-pulse"></i>
+                <i class="fas fa-user-check text-red-400 animate-pulse"></i>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">شراكات نشطة</p>
+        </a>
+
+        <!-- المبيعات -->
+        <a href="{{ url_for('sales') }}" class="bg-white rounded-lg shadow-md p-6 block hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg text-gray-500">المبيعات / الكاشير</h3>
+                <i class="fas fa-cash-register text-purple-500 text-2xl"></i>
+            </div>
+            <div class="flex items-end space-x-1 mt-4">
+                <div class="w-2 bg-purple-300 h-6"></div>
+                <div class="w-2 bg-purple-400 h-10"></div>
+                <div class="w-2 bg-purple-500 h-8"></div>
+                <div class="w-2 bg-purple-600 h-12"></div>
+                <div class="w-2 bg-purple-400 h-7"></div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">اتمام عمليات البيع والشراء</p>
+        </a>
+
+      <!-- البضاعة المرتجعة -->
+<a href="{{ url_for('returns') }}" 
+   class="bg-white rounded-lg shadow-md p-6 block hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+    
+    <div class="flex items-center justify-between">
+        <h3 class="text-lg text-gray-500">البضاعة المرتجعة</h3>
+        <i class="fas fa-undo text-orange-500 text-2xl"></i>
+    </div>
+
+    <!-- دائرة نسبة -->
+    <div class="relative flex items-center justify-center mt-6">
+        <svg class="w-16 h-16 transform -rotate-90">
+            <!-- الخلفية -->
+            <circle cx="32" cy="32" r="28" 
+                    class="text-gray-200" 
+                    stroke-width="6" fill="none" 
+                    stroke="currentColor"/>
+            <!-- التقدّم -->
+            <circle cx="32" cy="32" r="28" 
+                    class="text-orange-500" 
+                    stroke-width="6" fill="none" 
+                    stroke-linecap="round"
+                    stroke-dasharray="176" 
+                    stroke-dashoffset="44" />
+        </svg>
+        <span class="absolute text-lg font-semibold text-orange-600">%</span>
+    </div>
+
+    <p class="text-sm text-gray-500 mt-3 text-center">حافظ علي معدل مرتجعات منخفض</p>
+</a>
+
+
+        <!-- المعاملات السابقة -->
+        <a href="{{ url_for('transactions') }}" class="bg-white rounded-lg shadow-md p-6 block hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg text-gray-500">المعاملات السابقة</h3>
+                <i class="fas fa-history text-indigo-500 text-2xl"></i>
+            </div>
+            <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                <li><i class="fas fa-circle text-indigo-400 text-xs mr-2"></i> معاملة ناجحة</li>
+                <li><i class="fas fa-circle text-green-400 text-xs mr-2"></i> دفعة مكتملة</li>
+                <li><i class="fas fa-circle text-red-400 text-xs mr-2"></i> مرتجع</li>
+            </ul>
+        </a>
+
+    </div>
+</main>
+
+
+    <div id="termsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl shadow-lg relative">
+            <button id="closeModal" class="absolute top-4 left-4 text-gray-500 hover:text-gray-800">
+                <i class="fas fa-times-circle text-2xl"></i>
+            </button>
+            <h3 class="text-2xl font-bold mb-4">شروط الاستخدام والسياسة</h3>
+            <div class="text-gray-700 text-justify max-h-96 overflow-y-auto">
+    <p class="mb-4">
+        مرحبًا بك في منصة <strong>Vees المحاسبي المتكامل</strong>. قبل الاستفادة من خدماتنا، نرجو منك قراءة هذه الشروط والأحكام بعناية. يمثل استخدامك للمنصة موافقة صريحة وغير مشروطة على جميع البنود الواردة في هذه الوثيقة، والتي تُعد عقدًا ملزمًا بينك وبين الشركة المطورة.
+    </p>
+
+    <h4 class="text-lg font-semibold mt-6 mb-2">المادة 1: الملكية الفكرية وحقوق النشر</h4>
+    <p class="mb-4">
+        جميع المحتويات الموجودة على المنصة، بما في ذلك الأفكار، التصاميم، الأكواد البرمجية، النصوص، الرسوم البيانية، وقواعد البيانات، هي ملكية حصرية لمطوري <strong>Vees المحاسبي المتكامل</strong> ولا يجوز استخدامها أو نسخها بدون إذن صريح من المطورين.
+    </p>
+
+    <h4 class="text-lg font-semibold mt-6 mb-2">المادة 2: التزامات المستخدم</h4>
+    <p class="mb-4">
+        يلتزم المستخدم بتقديم معلومات دقيقة وصحيحة عند التسجيل، ويمنع استخدام المنصة لأي غرض غير قانوني أو ضار. كما يتحمل المستخدم مسؤولية أي نشاط يتم عبر حسابه الشخصي.
+    </p>
+
+    <h4 class="text-lg font-semibold mt-6 mb-2">المادة 3: إخلاء المسؤولية</h4>
+    <p>
+        تُقدَّم منصة <strong>Vees المحاسبي المتكامل</strong> "كما هي" دون أي ضمانات صريحة أو ضمنية. ويخلي المطورون مسؤوليتهم عن أي خسائر أو أضرار قد تنشأ عن استخدام المنصة، سواء مباشرة أو غير مباشرة.
+    </p>
+</div>
+
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchResultsDiv = document.getElementById('searchResults');
+            const resultsList = document.getElementById('resultsList');
+            const profileImage = document.getElementById('profileImage');
+            const profileMenu = document.getElementById('profileMenu');
+            const termsButton = document.getElementById('termsButton');
+            const termsModal = document.getElementById('termsModal');
+            const closeModalButton = document.getElementById('closeModal');
+            const logoutButton = document.getElementById('logoutButton');
+
+            // Hardcoded data for demonstration
+           
+
+            // --- Search Functionality ---
+            searchInput.addEventListener('input', (event) => {
+                const query = event.target.value.trim().toLowerCase();
+                resultsList.innerHTML = '';
+                if (query.length > 0) {
+                    const filteredData = data.filter(item =>
+                        item.name.toLowerCase().includes(query) ||
+                        item.id.toLowerCase().includes(query)
+                    );
+                    if (filteredData.length > 0) {
+                        filteredData.forEach(item => {
+                            const li = document.createElement('li');
+                            li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
+                            li.textContent = `${item.name} (${item.type === 'product' ? 'منتج' : item.type === 'employee' ? 'موظف' : 'عميل'})`;
+                            resultsList.appendChild(li);
+                        });
+                        searchResultsDiv.classList.remove('hidden');
+                    } else {
+                        const li = document.createElement('li');
+                        li.className = 'px-4 py-2 text-gray-500 italic';
+                        li.textContent = 'لا توجد نتائج';
+                        resultsList.appendChild(li);
+                        searchResultsDiv.classList.remove('hidden');
+                    }
+                } else {
+                    searchResultsDiv.classList.add('hidden');
+                }
+            });
+
+            // Hide search results when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!searchInput.contains(event.target) && !searchResultsDiv.contains(event.target)) {
+                    searchResultsDiv.classList.add('hidden');
+                }
+            });
+
+            // --- Profile Menu Functionality ---
+            // Toggle profile menu visibility on image click
+            profileImage.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent the document click from hiding the menu immediately
+                profileMenu.classList.toggle('hidden');
+            });
+
+            // Hide profile menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!profileMenu.contains(event.target) && !profileImage.contains(event.target)) {
+                    profileMenu.classList.add('hidden');
+                }
+            });
+
+            // --- Terms and Conditions Modal ---
+            // Show the modal when the "Terms" button is clicked
+            termsButton.addEventListener('click', () => {
+                termsModal.classList.remove('hidden');
+                profileMenu.classList.add('hidden');
+            });
+
+            // Hide the modal when the close button is clicked
+            closeModalButton.addEventListener('click', () => {
+                termsModal.classList.add('hidden');
+            });
+
+            // Hide modal when clicking on the background
+            termsModal.addEventListener('click', (event) => {
+                if (event.target === termsModal) {
+                    termsModal.classList.add('hidden');
+                }
+            });
+
+            // --- Logout Functionality ---
+            logoutButton.addEventListener('click', () => {
+                // Here you would add your actual logout logic
+                // For this example, we'll just redirect to the login page
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+    
+</script>
+</body>
+</html>

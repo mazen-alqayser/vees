@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأرباح والخسائر | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+      <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+    <main class="mr-64 pt-20 p-6">
+        <h2 class="text-3xl font-bold text-gray-700 mb-6">حساب الأرباح والخسائر</h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">اختر الفترة الزمنية للتقرير:</h3>
+            <div class="flex flex-wrap gap-4 items-end">
+                <div class="flex space-x-2">
+                    <button id="lastMonthBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">الشهر الماضي</button>
+                    <button id="lastYearBtn" class="px-4 py-2 bg-gray-400 text-gray-800 rounded-lg hover:bg-gray-500 transition-colors">العام الماضي</button>
+                    <button id="customRangeBtn" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">نطاق مخصص</button>
+                </div>
+                
+                <div id="customRangeFields" class="flex gap-4 hidden">
+                    <div>
+                        <label for="startDate" class="block text-sm font-medium text-gray-700">من تاريخ:</label>
+                        <input type="date" id="startDate" class="mt-1 p-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="endDate" class="block text-sm font-medium text-gray-700">إلى تاريخ:</label>
+                        <input type="date" id="endDate" class="mt-1 p-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <button id="applyCustomBtn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 self-end">تطبيق</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">ملخص الأداء المالي (<span id="reportPeriod">الشهر الماضي</span>)</h3>
+            
+            <div id="profitLossSummary" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-center">
+                <div class="bg-blue-50 border-r-4 border-blue-600 p-4 rounded-lg shadow-sm">
+                    <p class="text-sm text-gray-500">الإيرادات الكلية</p>
+                    <p id="summaryRevenue" class="text-2xl font-bold text-blue-600">0 ريال</p>
+                </div>
+                <div class="bg-red-50 border-r-4 border-red-600 p-4 rounded-lg shadow-sm">
+                    <p class="text-sm text-gray-500">المصروفات الكلية</p>
+                    <p id="summaryExpenses" class="text-2xl font-bold text-red-600">0 ريال</p>
+                </div>
+                <div class="bg-yellow-50 border-r-4 border-yellow-600 p-4 rounded-lg shadow-sm">
+                    <p class="text-sm text-gray-500">تكلفة المبيعات (COGS)</p>
+                    <p id="summaryCogs" class="text-2xl font-bold text-yellow-600">0 ريال</p>
+                </div>
+                <div class="bg-green-50 border-r-4 border-green-600 p-4 rounded-lg shadow-sm">
+                    <p class="text-sm text-gray-500">صافي الربح/الخسارة</p>
+                    <p id="summaryNet" class="text-2xl font-bold text-green-700">0 ريال</p>
+                </div>
+            </div>
+
+            <h4 class="text-lg font-semibold text-gray-700 mb-3 mt-8">مخطط الأداء الشهري/السنوي</h4>
+            <div class="h-96">
+                <canvas id="profitLossChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    // **متغيرات العناصر**
+    const ctx = document.getElementById('profitLossChart').getContext('2d');
+    const reportPeriodSpan = document.getElementById('reportPeriod');
+    const summaryRevenue = document.getElementById('summaryRevenue');
+    const summaryExpenses = document.getElementById('summaryExpenses');
+    const summaryCogs = document.getElementById('summaryCogs');
+    const summaryNet = document.getElementById('summaryNet');
+    const customRangeFields = document.getElementById('customRangeFields');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+
+    // **تهيئة الرسم البياني**
+    let profitLossChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['إيرادات المبيعات', 'تكلفة البضاعة المباعة', 'المصروفات التشغيلية', 'صافي الربح/الخسارة'],
+            datasets: [{
+                label: 'المبالغ (ريال)',
+                data: [0, 0, 0, 0],
+                backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(239, 68, 68, 0.7)', 'rgba(255, 159, 64, 0.7)', 'rgba(16, 185, 129, 0.7)'],
+                borderColor: ['rgba(59, 130, 246, 1)', 'rgba(239, 68, 68, 1)', 'rgba(255, 159, 64, 1)', 'rgba(16, 185, 129, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // للسماح بالتحكم بارتفاع الـ div الحاوي
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // **دالة جلب البيانات وتحديث الواجهة**
+    async function loadProfitLoss(periodType, startDate = null, endDate = null) {
+        let url = `/api/profit_loss?period=${periodType}`;
+
+        if (periodType === 'custom' && startDate && endDate) {
+            url += `&start_date=${startDate}&end_date=${endDate}`;
+        }
+        
+        try {
+            const response = await fetch(url);
+
+            if (response.status === 401) {
+                // توجيه لصفحة تسجيل الدخول إذا لم يكن المستخدم مصرحًا له
+                window.location.href = '/login'; 
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // حساب الإجمالي
+            const grossProfit = data.total_revenue - data.total_cogs;
+            const netProfit = data.total_revenue - data.total_cogs - data.total_expenses;
+
+            // تحديث الرسم البياني
+            profitLossChart.data.datasets[0].data = [
+                data.total_revenue,
+                data.total_cogs,
+                data.total_expenses,
+                netProfit // صافي الربح
+            ];
+            // تغيير لون شريط صافي الربح ليعكس ربح/خسارة
+            const netColor = netProfit >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(255, 0, 0, 0.7)'; 
+            profitLossChart.data.datasets[0].backgroundColor[3] = netColor;
+
+            profitLossChart.update();
+
+            // تحديث لوحة الملخص
+            summaryRevenue.textContent = `${data.total_revenue.toLocaleString()} ريال`;
+            summaryExpenses.textContent = `${data.total_expenses.toLocaleString()} ريال`;
+            summaryCogs.textContent = `${data.total_cogs.toLocaleString()} ريال`;
+            summaryNet.textContent = `${netProfit.toLocaleString()} ريال`;
+            summaryNet.parentElement.classList.remove('border-green-600', 'border-red-600');
+            summaryNet.parentElement.classList.add(netProfit >= 0 ? 'border-green-600' : 'border-red-600');
+            summaryNet.className = `text-2xl font-bold ${netProfit >= 0 ? 'text-green-700' : 'text-red-700'}`;
+            
+            // تحديث فترة التقرير المعروضة
+            reportPeriodSpan.textContent = data.period_label || 'تقرير مُخصص';
+
+        } catch (err) {
+            alert(`⚠️ فشل في تحميل التقرير: ${err.message}`);
+            console.error('Fetch Error:', err);
+            // إعادة تعيين الواجهة في حالة الخطأ
+            summaryRevenue.textContent = summaryExpenses.textContent = summaryCogs.textContent = summaryNet.textContent = 'خطأ';
+            profitLossChart.data.datasets[0].data = [0, 0, 0, 0];
+            profitLossChart.update();
+        }
+    }
+
+    // **وظائف التحكم بالفترة الزمنية**
+    document.getElementById('lastMonthBtn').addEventListener('click', () => {
+        customRangeFields.classList.add('hidden');
+        loadProfitLoss('month');
+    });
+    
+    document.getElementById('lastYearBtn').addEventListener('click', () => {
+        customRangeFields.classList.add('hidden');
+        loadProfitLoss('year');
+    });
+
+    document.getElementById('customRangeBtn').addEventListener('click', () => {
+        customRangeFields.classList.toggle('hidden');
+    });
+
+    document.getElementById('applyCustomBtn').addEventListener('click', () => {
+        const start = startDateInput.value;
+        const end = endDateInput.value;
+        if (start && end) {
+            loadProfitLoss('custom', start, end);
+        } else {
+            alert('الرجاء اختيار تاريخ بداية ونهاية للنطاق المخصص.');
+        }
+    });
+    
+    // تحميل بيانات الشهر الماضي افتراضيًا عند فتح الصفحة
+    window.onload = () => {
+        loadProfitLoss('month');
+    };
+    </script>
+
+</body>
+</html>

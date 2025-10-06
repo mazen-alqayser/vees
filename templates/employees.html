@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الموظفين | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* Modal Styles */
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.5); }
+        .modal { transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
+
+        /* fix for RTL layout with fixed sidebar/header */
+        /* تأكد أن الـ main يبدأ بعد الـ header وينتهي قبل الـ sidebar */
+        .page-content-wrapper {
+            /* 64px = 16 (p-4 in header) * 4 = py-4 * 2 (top/bottom) + 8 (margin/padding) */
+            padding-top: 4.5rem; /* pt-18 (72px) ليتناسب مع ارتفاع الهيدر الثابت */
+            margin-right: 16rem; /* 64 (w-64) لإفساح المجال للشريط الجانبي الثابت */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+       <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+    <main class="page-content-wrapper p-6">
+        <h2 class="text-3xl font-bold text-gray-700 mb-6">إدارة الموظفين</h2>
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h3 class="text-xl font-semibold text-gray-700">قائمة الموظفين</h3>
+                <button id="add-employee-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors shadow-lg">
+                    <i class="fas fa-plus ml-2"></i>إضافة موظف
+                </button>
+            </div>
+            <div class="overflow-x-auto rounded-lg border border-gray-200">
+                <table class="min-w-full bg-white divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-right">الاسم</th>
+                            <th class="py-3 px-6 text-right">المنصب</th>
+                            <th class="py-3 px-6 text-right">الراتب الشهري</th>
+                            <th class="py-3 px-6 text-right">موعد صرف الراتب</th>
+                            <th class="py-3 px-6 text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employees-table-body" class="text-gray-700 text-sm font-light divide-y divide-gray-200">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="employee-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden modal z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg mx-4"> 
+            <div class="flex justify-between items-center mb-6 border-b pb-3">
+                <h3 id="modal-title" class="text-2xl font-bold text-gray-800">إضافة موظف جديد</h3>
+                <button id="close-employee-modal" class="text-gray-500 hover:text-gray-700 text-3xl leading-none font-light">&times;</button>
+            </div>
+            <form id="employee-form">
+                <input type="hidden" id="employee-id">
+                <div class="mb-4">
+                    <label for="employee-name" class="block text-gray-700 text-sm font-bold mb-2">الاسم</label>
+                    <input type="text" id="employee-name" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4" id="email-field">
+                    <label for="employee-email" class="block text-gray-700 text-sm font-bold mb-2">البريد الإلكتروني</label>
+                    <input type="email" id="employee-email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="employee-position" class="block text-gray-700 text-sm font-bold mb-2">المنصب</label>
+                    <input type="text" id="employee-position" name="position" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="employee-salary" class="block text-gray-700 text-sm font-bold mb-2">الراتب الشهري</label>
+                    <input type="number" id="employee-salary" name="salary" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label for="employee-salary-date" class="block text-gray-700 text-sm font-bold mb-2">موعد صرف الراتب</label>
+                    <input type="date" id="employee-salary-date" name="salary_date" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-md">
+                        حفظ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden modal z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm mx-4 text-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+            <p class="text-lg font-semibold text-gray-700 mb-6">هل أنت متأكد من رغبتك في حذف هذا الموظف؟</p>
+            <div class="flex justify-center space-x-reverse space-x-4">
+                <button id="confirm-delete-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:shadow-outline shadow-md">
+                    تأكيد الحذف
+                </button>
+                <button id="cancel-delete-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:shadow-outline">
+                    تراجع
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // العناصر الرئيسية لجدول الموظفين
+            const employeesTableBody = document.getElementById('employees-table-body');
+            const addEmployeeBtn = document.getElementById('add-employee-btn');
+            const searchInput = document.getElementById('search-input');
+            
+            // عناصر نافذة الإضافة/التعديل (Employee Modal)
+            const employeeModal = document.getElementById('employee-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const closeEmployeeModalBtn = document.getElementById('close-employee-modal');
+            const employeeForm = document.getElementById('employee-form');
+            const employeeIdInput = document.getElementById('employee-id');
+            const employeeNameInput = document.getElementById('employee-name');
+            const employeeEmailInput = document.getElementById('employee-email');
+            const employeePositionInput = document.getElementById('employee-position');
+            const employeeSalaryInput = document.getElementById('employee-salary');
+            const employeeSalaryDateInput = document.getElementById('employee-salary-date');
+            const emailField = document.getElementById('email-field');
+            
+            // عناصر نافذة تأكيد الحذف (Delete Modal)
+            const deleteModal = document.getElementById('delete-modal');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+            let employeeToDeleteId = null;
+
+            // ------------------------------------
+            // الدوال الحقيقية للـ API (باستخدام fetch)
+            // ------------------------------------
+
+            // الدوال الخاصة بالـ API لم تتغير، مع افتراض أن مسارات Flask موجودة
+           const fetchEmployeesAPI = async (query = '') => {
+    const url = `/api/employees${query ? `?search=${query}` : ''}`;
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+        let errorMessage = 'فشل في جلب بيانات الموظفين (خطأ في الشبكة أو الخادم)';
+        
+        try {
+            // محاولة قراءة رسالة الخطأ كـ JSON
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorData.message || errorMessage;
+        } catch (e) {
+            // إذا لم تكن الاستجابة JSON (مثل صفحة 404 أو 500 HTML)
+            errorMessage = `خطأ ${response.status}: المسار غير موجود أو خطأ في الخادم.`;
+        }
+
+        throw new Error(errorMessage);
+    }
+    
+    return response.json();
+};
+
+            const getEmployeeByIdAPI = async (id) => {
+                const response = await fetch(`/api/employees/${id}`);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'الموظف غير موجود');
+                }
+                return response.json();
+            };
+
+            const saveEmployeeAPI = async (employee) => {
+                const isUpdate = !!employee.id;
+                const url = isUpdate ? `/api/employees/${employee.id}` : '/api/employees';
+                const method = isUpdate ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(employee)
+                });
+                
+                // **التعديل الجديد: التعامل مع الاستجابة بشكل أكثر أماناً**
+                if (!response.ok) {
+                    let errorMessage = 'حدث خطأ في الشبكة أو الخادم (Network/Server Error)';
+                    
+                    try {
+                        // محاولة قراءة رسالة الخطأ كـ JSON
+                        const errorData = await response.json();
+                        errorMessage = errorData.error || errorData.message || errorMessage;
+                    } catch (e) {
+                        // إذا فشلت قراءة JSON، فمن المحتمل أنها رسالة HTML (مثل 404)
+                        errorMessage = `خطأ ${response.status}: المسار غير موجود أو خطأ في الخادم (HTML Response)`;
+                        
+                        // يمكنك طباعة رسالة الاستجابة الكاملة هنا للمزيد من التصحيح
+                        // console.error(await response.text()); 
+                    }
+                    
+                    const action = isUpdate ? 'تعديل' : 'إضافة';
+                    throw new Error(`فشل في ${action} الموظف. رسالة الخطأ: ${errorMessage}`);
+                }
+                
+                // إذا كانت الاستجابة 200/201، اقرأها كـ JSON
+                return response.json();
+            };
+          const deleteEmployeeAPI = async (id) => {
+    const response = await fetch(`/api/employees/${id}`, {
+        method: 'DELETE'
+    });
+    
+    if (!response.ok) {
+        let errorMessage = 'فشل في حذف الموظف (خطأ في الشبكة أو الخادم)';
+        
+        try {
+            // محاولة قراءة رسالة الخطأ كـ JSON
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorData.message || errorMessage;
+        } catch (e) {
+            // إذا لم تكن الاستجابة JSON
+            errorMessage = `خطأ ${response.status}: المسار غير موجود أو خطأ في الخادم.`;
+        }
+
+        throw new Error(errorMessage);
+    }
+    
+    // بما أن الـ DELETE يعيد رسالة نجاح في الباكند، نقرأها
+    return response.json();
+};
+
+
+            // ------------------------------------
+            // وظائف DOM والتفاعل 
+            // ------------------------------------
+
+            // دالة لعرض جدول الموظفين
+            const renderEmployees = (data) => {
+                employeesTableBody.innerHTML = '';
+                if (!data || data.length === 0) {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.innerHTML = `<td colspan="5" class="py-4 px-6 text-center text-gray-500">لا توجد بيانات موظفين مطابقة.</td>`;
+                    employeesTableBody.appendChild(emptyRow);
+                    return;
+                }
+
+                data.forEach(employee => {
+                    const row = document.createElement('tr');
+                    row.className = "border-b border-gray-200 hover:bg-gray-50 transition-colors";
+                    row.innerHTML = `
+                        <td class="py-3 px-6 text-right whitespace-nowrap">${employee.name || 'غير محدد'}</td>
+                        <td class="py-3 px-6 text-right">${employee.position || 'غير محدد'}</td>
+                        <td class="py-3 px-6 text-right">${employee.salary ? parseFloat(employee.salary).toLocaleString('ar-SA') + ' ريال' : 'غير محدد'}</td>
+                        <td class="py-3 px-6 text-right">${employee.salary_date || 'غير محدد'}</td>
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex items-center justify-center space-x-reverse space-x-2">
+                                <button class="w-6 transform hover:text-blue-500 hover:scale-110 edit-btn" data-id="${employee.id}" title="تعديل"><i class="fas fa-edit"></i></button>
+                                <button class="w-6 transform hover:text-red-500 hover:scale-110 delete-btn" data-id="${employee.id}" title="حذف"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    employeesTableBody.appendChild(row);
+                });
+            };
+
+            // جلب وعرض الموظفين
+            const loadEmployees = async (searchTerm = '') => {
+                employeesTableBody.innerHTML = `<td colspan="5" class="py-4 px-6 text-center text-blue-500"><i class="fas fa-spinner fa-spin ml-2"></i> جارٍ تحميل البيانات...</td>`;
+                try {
+                    const employees = await fetchEmployeesAPI(searchTerm); 
+                    renderEmployees(employees);
+                } catch (error) {
+                    console.error('Error loading employees:', error);
+                    employeesTableBody.innerHTML = `<td colspan="5" class="py-4 px-6 text-center text-red-500">فشل في تحميل الموظفين: ${error.message}. تأكد من عمل خادم Flask.</td>`;
+                }
+            };
+
+            // فتح نموذج الإضافة
+            addEmployeeBtn.addEventListener('click', () => {
+                modalTitle.textContent = 'إضافة موظف جديد';
+                employeeForm.reset();
+                employeeIdInput.value = '';
+                employeeEmailInput.required = true; // مطلوب للإضافة
+                employeeEmailInput.value = ''; // تأكد من تفريغه
+                emailField.style.display = 'block'; // إظهار حقل البريد
+                employeeModal.classList.remove('hidden');
+            });
+
+            // إغلاق النموذج
+            closeEmployeeModalBtn.addEventListener('click', () => {
+                employeeModal.classList.add('hidden');
+            });
+
+            // التعامل مع إرسال النموذج (إضافة أو تعديل)
+            employeeForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = employeeIdInput.value ? parseInt(employeeIdInput.value) : null;
+                const name = employeeNameInput.value;
+                const position = employeePositionInput.value;
+                const salary = parseFloat(employeeSalaryInput.value);
+                const salary_date = employeeSalaryDateInput.value;
+                const email = employeeEmailInput.value;
+                
+                let body = { id, name, position, salary, salary_date };
+
+                if (!id) {
+                    // البريد الإلكتروني مطلوب فقط للإضافة
+                    body.email = email;
+                }
+
+                try {
+                    const result = await saveEmployeeAPI(body);
+                    alert(result.message);
+                    loadEmployees(searchInput.value.trim()); // إعادة تحميل قائمة الموظفين مع نفس مصطلح البحث
+                    employeeModal.classList.add('hidden');
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    alert('حدث خطأ: ' + error.message);
+                }
+            });
+
+            // التعامل مع النقر على زر التعديل والحذف في الجدول
+            employeesTableBody.addEventListener('click', async (e) => {
+                const targetBtn = e.target.closest('button');
+                if (!targetBtn) return;
+
+                const employeeId = targetBtn.dataset.id;
+
+                if (targetBtn.classList.contains('edit-btn')) {
+                    // زر التعديل
+                    try {
+                        const employee = await getEmployeeByIdAPI(employeeId);
+                        if (employee) {
+                            modalTitle.textContent = 'تعديل بيانات الموظف';
+                            employeeIdInput.value = employee.id;
+                            employeeNameInput.value = employee.name || '';
+                            employeePositionInput.value = employee.position || '';
+                            employeeSalaryInput.value = employee.salary || '';
+                            employeeSalaryDateInput.value = employee.salary_date || '';
+                            // لا نملأ حقل الإيميل هنا، فقط نجعله غير مطلوب ومخفيًا للتعديل
+                            employeeEmailInput.required = false; 
+                            emailField.style.display = 'none'; // إخفاء حقل البريد عند التعديل
+                            
+                            employeeModal.classList.remove('hidden');
+                        }
+                    } catch (error) {
+                            alert('فشل جلب بيانات الموظف: ' + error.message);
+                        }
+                } else if (targetBtn.classList.contains('delete-btn')) {
+                    // زر الحذف
+                    employeeToDeleteId = employeeId;
+                    deleteModal.classList.remove('hidden');
+                }
+            });
+            
+            // تأكيد الحذف
+            confirmDeleteBtn.addEventListener('click', async () => {
+                if (employeeToDeleteId) {
+                    try {
+                        const result = await deleteEmployeeAPI(employeeToDeleteId);
+                        alert(result.message);
+                        loadEmployees(searchInput.value.trim()); // إعادة تحميل القائمة مع نفس مصطلح البحث
+                        deleteModal.classList.add('hidden');
+                    } catch (error) {
+                        console.error('Error deleting employee:', error);
+                        alert('حدث خطأ أثناء حذف الموظف: ' + error.message);
+                    } finally {
+                        employeeToDeleteId = null;
+                    }
+                }
+            });
+
+            // إلغاء الحذف
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.classList.add('hidden');
+                employeeToDeleteId = null;
+            });
+
+            // التعامل مع البحث
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.trim();
+                loadEmployees(searchTerm); // تمرير مصطلح البحث إلى الدالة
+            });
+
+            // تحميل الموظفين عند فتح الصفحة
+            loadEmployees();
+        });
+    </script>
+</body>
+</html>

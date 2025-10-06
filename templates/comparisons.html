@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المقارنة اليدوية | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .comparison-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: default;
+        }
+        .comparison-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .input-manual {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            text-align: right;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+    <main class="mr-64 pt-20 p-6">
+        <h2 class="text-3xl font-bold text-gray-700 mb-6">📝 إدخال بيانات المقارنة اليدوية</h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 grid grid-cols-1 md:grid-cols-3 gap-6" dir="rtl">
+            <div class="flex-1">
+                <label for="currentMonthName" class="block text-sm font-medium text-gray-700 mb-1">اسم الشهر الحالي:</label>
+                <input type="text" id="currentMonthName" data-key="currentMonthName" value="أكتوبر" oninput="updatePage(); saveInput('currentMonthName');" class="input-manual" placeholder="مثل: الشهر الحالي">
+            </div>
+            <div class="flex-1">
+                <label for="previousMonthName" class="block text-sm font-medium text-gray-700 mb-1">اسم الشهر السابق:</label>
+                <input type="text" id="previousMonthName" data-key="previousMonthName" value="سبتمبر" oninput="updatePage(); saveInput('previousMonthName');" class="input-manual" placeholder="مثل: الشهر السابق">
+            </div>
+            <div class="flex-1">
+                <label for="input-total-cost" class="block text-sm font-medium text-gray-700 mb-1">إجمالي التكاليف (الشهر الحالي):</label>
+                <input type="number" id="input-total-cost" data-key="input-total-cost" value="75000" oninput="updatePage(); saveInput('input-total-cost');" class="input-manual text-red-700" min="0">
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-2 gap-4 comparison-card p-4 bg-white rounded-xl shadow">
+                <div class="space-y-2">
+                    <h3 class="text-sm text-gray-600">مبيعات الشهر الحالي</h3>
+                    <input type="number" id="input-current-sales" data-key="input-current-sales" value="125000" oninput="updatePage(); saveInput('input-current-sales');" class="input-manual text-green-600" min="0">
+                    <p id="current-sales" class="text-xl font-bold text-green-600 mt-2">--</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-sm text-gray-600">مبيعات الشهر الماضي</h3>
+                    <input type="number" id="input-previous-sales" data-key="input-previous-sales" value="105000" oninput="updatePage(); saveInput('input-previous-sales');" class="input-manual text-blue-600" min="0">
+                    <p id="previous-sales" class="text-xl font-bold text-blue-600 mt-2">--</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 comparison-card p-4 bg-white rounded-xl shadow">
+                <div class="space-y-2">
+                    <h3 class="text-sm text-gray-600">الربح الحالي</h3>
+                    <input type="number" id="input-current-profit" data-key="input-current-profit" value="45000" oninput="updatePage(); saveInput('input-current-profit');" class="input-manual text-green-700" min="0">
+                    <p id="current-profit" class="text-xl font-bold text-green-700 mt-2">--</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-sm text-gray-600">الربح السابق</h3>
+                    <input type="number" id="input-previous-profit" data-key="input-previous-profit" value="38000" oninput="updatePage(); saveInput('input-previous-profit');" class="input-manual text-red-600" min="0">
+                    <p id="previous-profit" class="text-xl font-bold text-red-600 mt-2">--</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 comparison-card p-4 bg-white rounded-xl shadow">
+                <div class="space-y-2">
+                    <h3 class="text-sm text-gray-600">عدد العملاء</h3>
+                    <input type="number" id="input-customers-count" data-key="input-customers-count" value="150" oninput="updatePage(); saveInput('input-customers-count');" class="input-manual text-blue-700" min="0" step="1">
+                    <p id="customers-count" class="text-xl font-bold text-blue-700 mt-2">--</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-sm text-gray-600">عدد الموظفين</h3>
+                    <input type="number" id="input-employees-count" data-key="input-employees-count" value="15" oninput="updatePage(); saveInput('input-employees-count');" class="input-manual text-indigo-700" min="0" step="1">
+                    <p id="employees-count" class="text-xl font-bold text-indigo-700 mt-2">--</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-700 mb-4">📊 الرسوم البيانية الإحصائية</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 id="chart-title-1" class="text-xl font-semibold text-gray-700 mb-4">مقارنة بين الشهر الحالي والشهر السابق</h3>
+                <canvas id="monthlyComparisonChart"></canvas>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">هيكل المبيعات مقابل الربح (الشهر الحالي)</h3>
+                <canvas id="salesProfitChart"></canvas>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">توزيع (إجمالي المبيعات، التكاليف، صافي الربح)</h3>
+                <canvas id="costStructureChart"></canvas>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">مقارنة عدد العملاء مقابل عدد الموظفين</h3>
+                <canvas id="customerEmployeeChart"></canvas>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // تخزين متغيرات الرسوم البيانية لتدميرها وإعادة إنشائها
+        let monthlyComparisonChart = null; 
+        let salesProfitChart = null;
+        let costStructureChart = null;
+        let customerEmployeeChart = null;
+
+        // تم تغيير رمز العملة هنا من 'EGP' إلى 'USD' لتظهر علامة $
+        const CURRENCY = 'USD'; 
+
+        // 1. الدالة المساعدة لتنسيق العملة
+        const formatCurrency = (amount) => {
+            const num = parseFloat(amount) || 0;
+            return num.toLocaleString('en-US', { // تم تغيير اللغة إلى 'en-US' لضمان ظهور $ على اليسار
+                style: 'currency',
+                currency: CURRENCY,
+                minimumFractionDigits: 0
+            }).replace('$', '$ '); // إضافة مسافة بعد علامة الدولار لتحسين القراءة في الواجهة العربية
+        };
+
+        // 2. دالة حفظ المدخلات في localStorage
+        function saveInput(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                localStorage.setItem(`manual_comparison_${id}`, element.value);
+            }
+        }
+
+        // 3. دالة تحميل المدخلات من localStorage
+        function loadInput() {
+            const inputs = document.querySelectorAll('[data-key]');
+            inputs.forEach(input => {
+                const storedValue = localStorage.getItem(`manual_comparison_${input.id}`);
+                if (storedValue !== null) {
+                    input.value = storedValue;
+                }
+            });
+        }
+        
+        // 4. الدالة الرئيسية لتحديث الواجهة بالبيانات المدخلة
+        function updatePage() {
+            // جلب القيم من حقول الإدخال
+            const currentSales = parseFloat(document.getElementById('input-current-sales').value) || 0;
+            const previousSales = parseFloat(document.getElementById('input-previous-sales').value) || 0;
+            const currentProfit = parseFloat(document.getElementById('input-current-profit').value) || 0;
+            const previousProfit = parseFloat(document.getElementById('input-previous-profit').value) || 0;
+            const customersCount = parseInt(document.getElementById('input-customers-count').value) || 0;
+            const employeesCount = parseInt(document.getElementById('input-employees-count').value) || 0;
+            const totalCost = parseFloat(document.getElementById('input-total-cost').value) || 0;
+            
+            const currentMonthName = document.getElementById('currentMonthName').value.trim() || 'الشهر الحالي';
+            const previousMonthName = document.getElementById('previousMonthName').value.trim() || 'الشهر السابق';
+
+            // 4.1. تحديث القيم في البطاقات
+            document.getElementById('current-sales').textContent = formatCurrency(currentSales);
+            document.getElementById('previous-sales').textContent = formatCurrency(previousSales);
+            document.getElementById('current-profit').textContent = formatCurrency(currentProfit);
+            document.getElementById('previous-profit').textContent = formatCurrency(previousProfit);
+            document.getElementById('customers-count').textContent = customersCount.toLocaleString('ar-EG');
+            document.getElementById('employees-count').textContent = employeesCount.toLocaleString('ar-EG');
+
+            // 4.2. تحديث عنوان الرسم البياني
+            document.getElementById('chart-title-1').innerHTML = 
+                `مقارنة بين (${currentMonthName}) و (${previousMonthName})`;
+            
+            // 4.3. تحديث جميع الرسوم البيانية
+
+            // ------------------------------------
+            // CHART 1: مقارنة المبيعات والأرباح (Bar Chart)
+            // ------------------------------------
+            if (monthlyComparisonChart) monthlyComparisonChart.destroy();
+            const ctx1 = document.getElementById('monthlyComparisonChart').getContext('2d');
+            monthlyComparisonChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['إجمالي المبيعات', 'صافي الربح'],
+                    datasets: [
+                        {
+                            label: `${currentMonthName}`,
+                            data: [currentSales, currentProfit],
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)', // أزرق
+                        },
+                        {
+                            label: `${previousMonthName}`,
+                            data: [previousSales, previousProfit],
+                            backgroundColor: 'rgba(107, 114, 128, 0.8)', // رمادي
+                        }
+                    ]
+                },
+                options: getChartOptions(CURRENCY)
+            });
+
+            // ------------------------------------
+            // CHART 2: هيكل المبيعات مقابل الربح (Doughnut Chart)
+            // ------------------------------------
+            const costOfGoodsSold = currentSales - currentProfit;
+            if (salesProfitChart) salesProfitChart.destroy();
+            const ctx2 = document.getElementById('salesProfitChart').getContext('2d');
+            salesProfitChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['صافي الربح', 'تكلفة البضاعة المباعة (COGS)'],
+                    datasets: [{
+                        data: [currentProfit, costOfGoodsSold],
+                        backgroundColor: ['#10b981', '#ef4444'], // أخضر وأحمر
+                        hoverOffset: 4
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { 
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += formatCurrency(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    } 
+                }
+            });
+
+            // ------------------------------------
+            // CHART 3: توزيع (مبيعات، تكاليف، ربح) (Line Chart)
+            // ------------------------------------
+            if (costStructureChart) costStructureChart.destroy();
+            const ctx3 = document.getElementById('costStructureChart').getContext('2d');
+            costStructureChart = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: [currentMonthName, previousMonthName],
+                    datasets: [
+                        {
+                            label: 'إجمالي المبيعات',
+                            data: [currentSales, previousSales],
+                            borderColor: '#3b82f6', // أزرق
+                            tension: 0.3
+                        },
+                        {
+                            label: 'صافي الربح',
+                            data: [currentProfit, previousProfit],
+                            borderColor: '#10b981', // أخضر
+                            tension: 0.3
+                        },
+                        {
+                            label: 'التكاليف المضافة يدوياً',
+                            data: [totalCost, 0], 
+                            borderColor: '#f97316', // برتقالي
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: getChartOptions(CURRENCY, true)
+            });
+            
+            // ------------------------------------
+            // CHART 4: مقارنة العملاء والموظفين (Doughnut Chart)
+            // ------------------------------------
+            if (customerEmployeeChart) customerEmployeeChart.destroy();
+            const ctx4 = document.getElementById('customerEmployeeChart').getContext('2d');
+            customerEmployeeChart = new Chart(ctx4, {
+                type: 'doughnut',
+                data: {
+                    labels: ['عدد العملاء', 'عدد الموظفين'],
+                    datasets: [{
+                        data: [customersCount, employeesCount],
+                        backgroundColor: ['#2563eb', '#8b5cf6'], // أزرق غامق وبنفسجي
+                        hoverOffset: 4
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { 
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed.toLocaleString('ar-EG');
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    } 
+                }
+            });
+        }
+
+        // 5. دالة لإعداد خيارات الرسم البياني المشتركة (لتنسيق العملة)
+        function getChartOptions(currencyCode, isLine = false) {
+            return {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        // عرض العملة لمحور Y
+                        ticks: {
+                            callback: function(value) {
+                                // استخدام نفس دالة formatCurrency لتنسيق الأرقام على المحور
+                                return formatCurrency(value);
+                            }
+                        },
+                        display: !isLine 
+                    },
+                    x: {
+                        ticks: { font: { family: 'sans-serif' } } 
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    // تحسين تلميحات الأدوات لعرض العملة
+                    tooltip: { 
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += formatCurrency(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        // 6. تشغيل الدوال عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            loadInput(); // تحميل البيانات المحفوظة أولاً
+            updatePage(); // ثم تحديث الواجهة بناءً على البيانات المحملة/الافتراضية
+        });
+    </script>
+</body>
+</html>

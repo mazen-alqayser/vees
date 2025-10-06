@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>العملاء والديون | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5e9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* Ensure modals are on top */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+    <main class="mr-64 pt-20 p-6">
+        <h2 class="text-3xl font-bold text-gray-700 mb-6">إدارة العملاء والديون</h2>
+
+        <div class="flex flex-col md:flex-row items-center justify-between bg-white rounded-lg shadow-md p-4 mb-6">
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                <button id="addCustomerBtn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                    <i class="fas fa-plus ml-2"></i> إضافة عميل جديد
+                </button>
+                <button id="addDebtBtn" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors">
+                    <i class="fas fa-money-bill-wave ml-2"></i> إضافة دين / تسديد
+                </button>
+            </div>
+            <div class="flex items-center space-x-4 mt-4 md:mt-0 w-full md:w-auto">
+                <input id="customerSearch" type="text" placeholder="بحث باسم العميل..." class="bg-gray-100 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64">
+                <select id="statusFilter" class="bg-gray-100 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="all">الكل</option>
+                    <option value="unpaid">دين مستحق</option>
+                    <option value="paid">تم التسديد</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم العميل</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ملخص المنتجات</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">إجمالي الدين</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المسدد</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الرصيد المتبقي</th>
+                                <th scope="col" class="relative px-6 py-3 text-right"><span class="sr-only">إجراءات</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody" class="bg-white divide-y divide-gray-200">
+                            <tr><td colspan="6" class="p-4 text-center text-gray-500">جاري تحميل العملاء...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- إضافة / تعديل عميل -->
+    <div id="customerModal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg overflow-y-auto max-h-screen">
+            <div class="flex justify-between items-start mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold text-gray-800">إضافة عميل جديد</h3>
+                <button id="closeCustomerModalBtnTop" class="text-gray-500 hover:text-gray-800"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="new-customer-form" class="space-y-4" data-mode="add" data-id="">
+                <div>
+                    <label for="new-customer-name" class="block text-sm font-medium text-gray-700">اسم العميل/الشركة</label>
+                    <input type="text" id="new-customer-name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" required>
+                </div>
+                <div>
+                    <label for="contact-info" class="block text-sm font-medium text-gray-700">معلومات الاتصال (هاتف، ايميل، عنوان...)</label>
+                    <input type="text" id="contact-info" name="contact_info" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" placeholder="أدخل معلومات الاتصال">
+                </div>
+                <div>
+                    <label for="products-sold-summary" class="block text-sm font-medium text-gray-700">ملخص المنتجات المباعة</label>
+                    <textarea id="products-sold-summary" name="products_sold_summary" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" placeholder="أدخل ملخص المنتجات أو الخدمات التي قدمتها"></textarea>
+                </div>
+                
+                <div id="initialDebtContainer" class="flex space-x-4">
+                    <div class="w-1/2">
+                        <label for="initial-debt" class="block text-sm font-medium text-gray-700">دين سابق مستحق (المبلغ)</label>
+                        <input type="number" id="initial-debt" name="initial_debt" value="0.00" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                    </div>
+                    <div class="w-1/2">
+                        <label for="initial-paid" class="block text-sm font-medium text-gray-700">تم التسديد سابقًا (المبلغ)</label>
+                        <input type="number" id="initial-paid" name="initial_paid" value="0.00" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="closeCustomerModalBtn" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors">إلغاء</button>
+                    <button type="submit" id="saveCustomerBtn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">حفظ العميل</button>
+                </div>
+            </form>
+        </div>
+    </div>    
+
+    <!-- إضافة / تعديل دين -->
+    <div id="debtModal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md overflow-y-auto max-h-screen">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-800 mb-0">إضافة دين جديد / تسجيل تسديد</h3>
+                <button id="closeDebtModalBtnTop" class="text-gray-500 hover:text-gray-800"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="debt-update-form" class="space-y-4" data-customer-id="">
+                
+                <div>
+                    <label for="debtCustomerSelect" class="block text-sm font-medium text-gray-700">اختر العميل</label>
+                    <select id="debtCustomerSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" required>
+                        <option value="">اختر العميل...</option>
+                    </select>
+                </div>
+
+                <div id="customerDetailsDisplay" class="bg-gray-50 p-3 rounded-md border border-gray-200">
+                    <p class="text-sm font-medium text-gray-700">العميل: <strong id="customer-name-display">---</strong></p>
+                    <p class="text-sm font-medium text-gray-700">الرصيد المتبقي: <strong id="current-debt-display" class="text-red-600">---</strong></p>
+                    <p class="text-xs text-gray-500">ملخص المنتجات: <span id="products-summary-display">---</span></p>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-sm font-bold text-gray-800 pt-2">إجراءات الدين:</label>
+                    <div>
+                        <label for="new-debt-amount" class="block text-sm font-medium text-gray-700">إضافة دين جديد (المبلغ):</label>
+                        <input type="number" id="new-debt-amount" value="0.00" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                    </div>
+                    <div>
+                        <label for="payment-amount" class="block text-sm font-medium text-gray-700">تسجيل تسديد (المبلغ المدفوع):</label>
+                        <input type="number" id="payment-amount" value="0.00" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="closeDebtModalBtn" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors">إلغاء</button>
+                    <button type="submit" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors">تحديث الحساب</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- تأكيد حذف -->
+    <div id="deleteModal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
+            <h3 class="text-xl font-bold text-red-600 mb-4">تأكيد الحذف</h3>
+            <p id="deleteMessage" class="mb-6 text-gray-700">هل أنت متأكد من أنك تريد حذف العميل؟</p>
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="cancelDeleteBtn" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors">إلغاء</button>
+                <button type="button" id="confirmDeleteBtn" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">حذف نهائي</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- عرض بيانات العميل (عند النقر على الاسم) -->
+    <div id="viewCustomerModal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg overflow-y-auto max-h-screen">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-800">تفاصيل العميل</h3>
+                <button id="closeViewModalBtnTop" class="text-gray-500 hover:text-gray-800"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="viewCustomerContent" class="space-y-3 text-right">
+                <p><span class="font-medium">الاسم:</span> <span id="view-name">---</span></p>
+                <p><span class="font-medium">معلومات الاتصال:</span> <span id="view-contact">---</span></p>
+                <p><span class="font-medium">ملخص المنتجات:</span> <span id="view-products">---</span></p>
+                <p><span class="font-medium">إجمالي الدين:</span> <span id="view-total-debt">0.00</span></p>
+                <p><span class="font-medium">المسدد:</span> <span id="view-total-paid">0.00</span></p>
+                <p><span class="font-medium">الرصيد المتبقي:</span> <span id="view-remaining">0.00</span></p>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button id="closeViewModalBtn" type="button" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // عناصر رئيسية
+            const customersTableBody = document.getElementById('customersTableBody');
+            const customerModal = document.getElementById('customerModal');
+            const debtModal = document.getElementById('debtModal');
+            const deleteModal = document.getElementById('deleteModal');
+            const viewCustomerModal = document.getElementById('viewCustomerModal');
+
+            const addCustomerBtn = document.getElementById('addCustomerBtn');
+            const addDebtBtn = document.getElementById('addDebtBtn');
+            const closeCustomerModalBtn = document.getElementById('closeCustomerModalBtn');
+            const closeDebtModalBtn = document.getElementById('closeDebtModalBtn');
+
+            const newCustomerForm = document.getElementById('new-customer-form');
+            const modalTitle = document.getElementById('modalTitle');
+            const initialDebtContainer = document.getElementById('initialDebtContainer');
+
+            const debtUpdateForm = document.getElementById('debt-update-form');
+            const debtCustomerSelect = document.getElementById('debtCustomerSelect');
+
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const deleteMessage = document.getElementById('deleteMessage');
+
+            const customerSearchInput = document.getElementById('customerSearch');
+            const statusFilter = document.getElementById('statusFilter');
+
+            // view modal elements
+            const viewName = document.getElementById('view-name');
+            const viewContact = document.getElementById('view-contact');
+            const viewProducts = document.getElementById('view-products');
+            const viewTotalDebt = document.getElementById('view-total-debt');
+            const viewTotalPaid = document.getElementById('view-total-paid');
+            const viewRemaining = document.getElementById('view-remaining');
+
+            // small displays in debt modal
+            const customerNameDisplay = document.getElementById('customer-name-display');
+            const currentDebtDisplay = document.getElementById('current-debt-display');
+            const productsSummaryDisplay = document.getElementById('products-summary-display');
+
+            // متغير لحفظ ID للحذف
+            let customerIdToDelete = null;
+
+            // ----------------------------------------------------
+            // دوال مساعدة لفتح وإغلاق المودالات
+            // ----------------------------------------------------
+            function showModal(modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+            function hideModal(modal) { modal.classList.remove('flex'); modal.classList.add('hidden'); }
+
+            // اغلاق عند الضغط على الخلفية
+            [customerModal, debtModal, deleteModal, viewCustomerModal].forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) hideModal(modal);
+                });
+            });
+
+            // اغلاق بالازرار العلوية
+            document.getElementById('closeCustomerModalBtnTop').addEventListener('click', () => hideModal(customerModal));
+            document.getElementById('closeDebtModalBtnTop').addEventListener('click', () => hideModal(debtModal));
+            document.getElementById('closeViewModalBtnTop').addEventListener('click', () => hideModal(viewCustomerModal));
+
+            document.getElementById('closeViewModalBtn').addEventListener('click', () => hideModal(viewCustomerModal));
+            document.getElementById('closeCustomerModalBtn').addEventListener('click', () => hideModal(customerModal));
+            document.getElementById('closeDebtModalBtn').addEventListener('click', () => hideModal(debtModal));
+            cancelDeleteBtn.addEventListener('click', () => hideModal(deleteModal));
+
+            // اغلاق بالـ Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    [customerModal, debtModal, deleteModal, viewCustomerModal].forEach(m => hideModal(m));
+                }
+            });
+
+            // ----------------------------------------------------
+            // جلب العملاء من السيرفر وملئ الجدول/القائمة
+            // ----------------------------------------------------
+            async function fetchCustomers(targetElement = customersTableBody, isDropdown = false) {
+                try {
+                    if (isDropdown) {
+                        targetElement.innerHTML = '<option value="">جاري التحميل...</option>';
+                    } else {
+                        targetElement.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">جاري تحميل العملاء...</td></tr>';
+                    }
+
+                    const response = await fetch('/api/customers');
+                    if (!response.ok) throw new Error('فشل جلب قائمة العملاء من الخادم.');
+                    const data = await response.json();
+
+                    // استخرج المصفوفة سواء رجعت مباشرة أو كحقل داخل الكائن
+                    let customers = Array.isArray(data) ? data : (Array.isArray(data.customers) ? data.customers : []);
+
+                    // تطبيع الحقول (للتوافق مع عدة واجهات API محتملة)
+                    customers = customers.map(c => ({
+                        customer_id: c.customer_id ?? c.id ?? c._id ?? null,
+                        name: c.name ?? c.title ?? '---',
+                        contact_info: c.contact_info ?? c.contactInfo ?? '',
+                        products_sold_summary: c.products_sold_summary ?? c.productsSoldSummary ?? '',
+                        total_debt: parseFloat(c.total_debt ?? c.totalDebt ?? 0) || 0,
+                        total_paid: parseFloat(c.total_paid ?? c.totalPaid ?? 0) || 0,
+                    })).map(c => ({
+                        ...c,
+                        remaining_debt: (typeof c.remaining_debt !== 'undefined') ? parseFloat(c.remaining_debt || 0) : (c.total_debt - c.total_paid)
+                    }));
+
+                    // تطبيق البحث والفلترة
+                    const query = customerSearchInput.value.trim().toLowerCase();
+                    const status = statusFilter.value;
+                    customers = customers.filter(customer => {
+                        const matchesSearch = customer.name.toLowerCase().includes(query);
+                        const isPaid = customer.remaining_debt <= 0;
+                        const matchesStatus = (status === 'all') || (status === 'paid' && isPaid) || (status === 'unpaid' && !isPaid);
+                        return matchesSearch && matchesStatus;
+                    });
+
+                    if (isDropdown) {
+                        // ملء القائمة المنسدلة
+                        targetElement.innerHTML = '<option value="">اختر العميل...</option>';
+                        customers.forEach(customer => {
+                            const opt = document.createElement('option');
+                            opt.value = customer.customer_id ?? customer.name;
+                            opt.textContent = `${customer.name} (متبقي: ${Number(customer.remaining_debt).toFixed(2)})`;
+                            targetElement.appendChild(opt);
+                        });
+                    } else {
+                        renderCustomersTable(customers);
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching customers:', error);
+                    if (isDropdown) {
+                        targetElement.innerHTML = '<option value="">خطأ في التحميل</option>';
+                    } else {
+                        targetElement.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-red-500">فشل في تحميل بيانات العملاء.</td></tr>';
+                    }
+                }
+            }
+
+            // ----------------------------------------------------
+            // عرض جدول العملاء
+            // ----------------------------------------------------
+            function renderCustomersTable(customers) {
+                customersTableBody.innerHTML = '';
+                if (!customers || customers.length === 0) {
+                    customersTableBody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">لا يوجد عملاء مطابقون لشروط البحث/التصفية.</td></tr>';
+                    return;
+                }
+
+                customers.forEach(customer => {
+                    const remainingDebt = Number(customer.remaining_debt || 0);
+                    const isPaid = remainingDebt <= 0;
+                    const statusClass = isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                    const statusText = isPaid ? 'تم التسديد' : 'دين مستحق';
+                    const remainingDebtColor = isPaid ? 'text-green-600' : 'text-red-600';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <button class="customer-name-btn text-right hover:underline" data-id="${customer.customer_id}">${escapeHtml(customer.name)}</button>
+                        </td>
+                        <td class="px-6 py-4 whitespace-normal text-sm text-gray-500 max-w-xs">${escapeHtml(customer.products_sold_summary || 'لا يوجد')}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${Number(customer.total_debt || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${Number(customer.total_paid || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold ${remainingDebtColor}">${remainingDebt.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                                ${statusText}
+                            </span>
+                            <button data-id="${customer.customer_id}" class="edit-btn text-indigo-600 hover:text-indigo-900 ml-2" title="تعديل"><i class="fas fa-edit"></i></button>
+                            <button data-id="${customer.customer_id}" data-name="${escapeHtml(customer.name)}" class="delete-btn text-red-600 hover:text-red-900" title="حذف"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    customersTableBody.appendChild(tr);
+                });
+            }
+
+            // دالة صغيرة لطرد مشاكل الـHTML injection
+            function escapeHtml(unsafe) {
+                return String(unsafe)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            // ----------------------------------------------------
+            // اجراءات الاضافة / التعديل (نموذج العميل)
+            // ----------------------------------------------------
+            addCustomerBtn.addEventListener('click', () => {
+                modalTitle.textContent = 'إضافة عميل جديد';
+                newCustomerForm.reset();
+                newCustomerForm.dataset.mode = 'add';
+                newCustomerForm.dataset.id = '';
+                initialDebtContainer.classList.remove('hidden');
+                showModal(customerModal);
+            });
+
+            newCustomerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const mode = newCustomerForm.dataset.mode;
+                const customerId = newCustomerForm.dataset.id;
+
+                const data = {
+                    name: document.getElementById('new-customer-name').value.trim(),
+                    contact_info: document.getElementById('contact-info').value.trim(),
+                    products_sold_summary: document.getElementById('products-sold-summary').value.trim(),
+                };
+
+                let method = 'POST';
+                let url = '/api/customers';
+                let successMessage = 'تم إضافة العميل بنجاح!';
+
+                if (mode === 'add') {
+                    data.initial_debt = parseFloat(document.getElementById('initial-debt').value) || 0;
+                    data.initial_paid = parseFloat(document.getElementById('initial-paid').value) || 0;
+                } else if (mode === 'edit') {
+                    method = 'PUT';
+                    url = `/api/customers/${customerId}`;
+                    successMessage = 'تم تحديث بيانات العميل بنجاح!';
+                }
+
+                try {
+                    const response = await fetch(url, {
+                        method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(successMessage);
+                        newCustomerForm.reset();
+                        hideModal(customerModal);
+                        fetchCustomers(customersTableBody, false);
+                    } else {
+                        alert(`فشل العملية: ${result.error || JSON.stringify(result)}`);
+                    }
+                } catch (error) {
+                    console.error('Error during save customer:', error);
+                    alert('حدث خطأ في الاتصال بالخادم. تحقق من تشغيل الخادم.');
+                }
+            });
+
+            // ----------------------------------------------------
+            // فتح نموذج التعديل / العرض / حذف عند النقر داخل الجدول (delegation)
+            // ----------------------------------------------------
+            customersTableBody.addEventListener('click', async (event) => {
+                // تعديل
+                const editBtn = event.target.closest('.edit-btn');
+                if (editBtn) {
+                    const customerId = editBtn.dataset.id;
+                    try {
+                        const response = await fetch(`/api/customers/${customerId}`);
+                        if (!response.ok) throw new Error('فشل جلب تفاصيل العميل');
+                        const customer = await response.json();
+
+                        modalTitle.textContent = 'تعديل بيانات العميل';
+                        newCustomerForm.dataset.mode = 'edit';
+                        newCustomerForm.dataset.id = customerId;
+
+                        document.getElementById('new-customer-name').value = customer.name || '';
+                        document.getElementById('contact-info').value = customer.contact_info || customer.contactInfo || '';
+                        document.getElementById('products-sold-summary').value = customer.products_sold_summary || customer.productsSoldSummary || '';
+
+                        initialDebtContainer.classList.add('hidden');
+
+                        showModal(customerModal);
+                    } catch (error) {
+                        console.error('Error fetching customer for edit:', error);
+                        alert('حدث خطأ أثناء تحميل بيانات العميل للتعديل.');
+                    }
+                    return;
+                }
+
+                // حذف
+                const deleteBtn = event.target.closest('.delete-btn');
+                if (deleteBtn) {
+                    customerIdToDelete = deleteBtn.dataset.id;
+                    const customerName = deleteBtn.dataset.name || '';
+                    deleteMessage.textContent = `هل أنت متأكد من أنك تريد حذف العميل "${customerName}"؟ لا يمكن التراجع عن هذا الإجراء.`;
+                    showModal(deleteModal);
+                    return;
+                }
+
+                // عرض التفاصيل عند الضغط على الاسم
+                const nameBtn = event.target.closest('.customer-name-btn');
+                if (nameBtn) {
+                    const customerId = nameBtn.dataset.id;
+                    try {
+                        const response = await fetch(`/api/customers/${customerId}`);
+                        if (!response.ok) throw new Error('فشل جلب تفاصيل العميل');
+                        const c = await response.json();
+
+                        viewName.textContent = c.name || '';
+                        viewContact.textContent = c.contact_info || c.contactInfo || '---';
+                        viewProducts.textContent = c.products_sold_summary || c.productsSoldSummary || '---';
+                        viewTotalDebt.textContent = (Number(c.total_debt ?? c.totalDebt) || 0).toFixed(2);
+                        viewTotalPaid.textContent = (Number(c.total_paid ?? c.totalPaid) || 0).toFixed(2);
+                        const remaining = (typeof c.remaining_debt !== 'undefined') ? Number(c.remaining_debt) : ((Number(c.total_debt || c.totalDebt) || 0) - (Number(c.total_paid || c.totalPaid) || 0));
+                        viewRemaining.textContent = Number(remaining || 0).toFixed(2);
+
+                        showModal(viewCustomerModal);
+                    } catch (error) {
+                        console.error('Error fetching customer for view:', error);
+                        alert('حدث خطأ أثناء تحميل بيانات العميل.');
+                    }
+                    return;
+                }
+            });
+
+            // ----------------------------------------------------
+            // تنفيذ حذف العميل
+            // ----------------------------------------------------
+            confirmDeleteBtn.addEventListener('click', async () => {
+                if (!customerIdToDelete) return;
+                try {
+                    const response = await fetch(`/api/customers/${customerIdToDelete}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message || 'تم حذف العميل بنجاح');
+                        customerIdToDelete = null;
+                        hideModal(deleteModal);
+                        fetchCustomers(customersTableBody, false);
+                    } else {
+                        alert(`فشل الحذف: ${result.error || JSON.stringify(result)}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting customer:', error);
+                    alert('حدث خطأ في الاتصال بالخادم أثناء محاولة الحذف.');
+                }
+            });
+
+            // ----------------------------------------------------
+            // تحديث الدين / تسجيل تسديد
+            // ----------------------------------------------------
+            function clearDebtDetailsDisplay() {
+                customerNameDisplay.textContent = '---';
+                currentDebtDisplay.textContent = '---';
+                productsSummaryDisplay.textContent = '---';
+                debtUpdateForm.dataset.customerId = '';
+                document.getElementById('new-debt-amount').value = '0.00';
+                document.getElementById('payment-amount').value = '0.00';
+            }
+
+            async function fetchCustomerDetails(customerId) {
+                try {
+                    const response = await fetch(`/api/customers/${customerId}`);
+                    if (!response.ok) throw new Error('فشل جلب تفاصيل العميل');
+                    const customer = await response.json();
+
+                    customerNameDisplay.textContent = customer.name || '';
+                    currentDebtDisplay.textContent = `${(Number(customer.remaining_debt ?? (customer.total_debt - customer.total_paid)) || 0).toFixed(2)}`;
+                    productsSummaryDisplay.textContent = customer.products_sold_summary || 'لا يوجد';
+                    debtUpdateForm.dataset.customerId = customerId;
+                } catch (error) {
+                    console.error('Error fetching customer details:', error);
+                    alert('حدث خطأ أثناء تحميل تفاصيل العميل.');
+                    clearDebtDetailsDisplay();
+                }
+            }
+
+            // عند تغيير الاختيار في مودال الدين
+            debtCustomerSelect.addEventListener('change', (e) => {
+                const id = e.target.value;
+                if (id) fetchCustomerDetails(id);
+                else clearDebtDetailsDisplay();
+            });
+
+            // فتح مودال الدين
+            addDebtBtn.addEventListener('click', async () => {
+                // جلب العملاء لملء السلكت
+                await fetchCustomers(debtCustomerSelect, true);
+                clearDebtDetailsDisplay();
+                showModal(debtModal);
+            });
+
+            debtUpdateForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const customerId = debtUpdateForm.dataset.customerId;
+                if (!customerId) { alert('الرجاء اختيار عميل أولاً.'); return; }
+
+                const newDebtAmount = parseFloat(document.getElementById('new-debt-amount').value) || 0;
+                const paymentAmount = parseFloat(document.getElementById('payment-amount').value) || 0;
+
+                if (newDebtAmount === 0 && paymentAmount === 0) { alert('الرجاء إدخال قيمة للدين الجديد أو التسديد.'); return; }
+
+                const updateData = { new_debt_amount: newDebtAmount, payment_amount: paymentAmount };
+
+                try {
+                    const response = await fetch(`/api/customers/${customerId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updateData)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message || 'تم تحديث الحساب بنجاح');
+                        document.getElementById('new-debt-amount').value = '0.00';
+                        document.getElementById('payment-amount').value = '0.00';
+                        fetchCustomerDetails(customerId);
+                        fetchCustomers(customersTableBody, false);
+                    } else {
+                        alert(`فشل التحديث: ${result.error || JSON.stringify(result)}`);
+                    }
+                } catch (error) {
+                    console.error('Error updating debt:', error);
+                    alert('حدث خطأ في الاتصال بالخادم. تحقق من تشغيل الخادم.');
+                }
+            });
+
+            // ----------------------------------------------------
+            // مستمعات البحث والتصفية
+            // ----------------------------------------------------
+            customerSearchInput.addEventListener('input', () => fetchCustomers(customersTableBody, false));
+            statusFilter.addEventListener('change', () => fetchCustomers(customersTableBody, false));
+
+            // ----------------------------------------------------
+            // بحث علوي (mock) - يمكنك ربطه لاحقاً مع API
+            // ----------------------------------------------------
+            const searchResultsDiv = document.getElementById('searchResults');
+            const resultsList = document.getElementById('resultsList');
+            const searchData = [
+                { type: 'product', name: 'لابتوب ديل', id: 'P001' },
+                { type: 'product', name: 'هاتف سامسونج', id: 'P002' },
+                { type: 'customer', name: 'شركة الأمل', id: 'C001' }
+            ];
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (event) => {
+                const query = event.target.value.trim().toLowerCase();
+                resultsList.innerHTML = '';
+                searchResultsDiv.classList.add('hidden');
+                if (query.length > 0) {
+                    const filtered = searchData.filter(item => item.name.toLowerCase().includes(query) || item.id.toLowerCase().includes(query));
+                    if (filtered.length > 0) {
+                        filtered.forEach(item => {
+                            const li = document.createElement('li');
+                            li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
+                            li.textContent = `${item.name} (${item.type === 'product' ? 'منتج' : item.type === 'customer' ? 'عميل' : 'موظف'})`;
+                            resultsList.appendChild(li);
+                        });
+                        searchResultsDiv.classList.remove('hidden');
+                    }
+                }
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!searchInput.contains(event.target) && !searchResultsDiv.contains(event.target)) {
+                    searchResultsDiv.classList.add('hidden');
+                }
+            });
+
+            // جلب العملاء عند التحميل
+            fetchCustomers(customersTableBody, false);
+        });
+    </script>
+</body>
+</html>

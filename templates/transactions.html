@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المعاملات السابقة | Vees</title>
+            <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/mazen-alqayser/Air-Ticket-Reservation-dr-anas-project/refs/heads/main/ChatGPT%20Image%20Oct%205%2C%202025%2C%2005_35_52%20PM%20-%20Copy.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <!-- Header -->
+   <header class="bg-white shadow-sm py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+  <h1 class="mb-6 text-center text-4xl font-extrabold text-gray-700">
+  <span class="text-black-600">Vees</span>
+</h1>
+
+
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="بحث..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="text-gray-600 hover:text-blue-500 transition-colors"><i class="fas fa-bell text-lg"></i></button>
+            <div class="relative">
+                <img src="https://raw.githubusercontent.com/mazen-alqayser/a/refs/heads/main/527433485_4614807792079064_709098891592975352_n.jpg" alt="صورة الملف الشخصي" class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+        </div>
+    </header>
+    <!-- Sidebar -->
+<aside id="sidebar" class="bg-gray-800 text-gray-100 w-64 fixed top-0 right-0 z-40 pt-20 h-full overflow-y-auto">
+    <nav class="mt-4">
+        <ul class="space-y-1">
+            
+            <li class="mb-2">
+                <a href="{{ url_for('index') }}" class="flex items-center p-4 text-white bg-gray-700 transition-colors rounded-r-lg">
+                    <i class="fas fa-chart-line ml-3"></i>
+                    <span>الرئيسية (لوحة القيادة)</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('sales') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cash-register ml-3"></i>
+                    <span>المبيعات</span>
+                </a>
+            </li>
+            
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">التحليل المالي</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('reports') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-file-invoice-dollar ml-3"></i>
+                    <span>التقارير المالية</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('profit_loss') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-chart-bar ml-3"></i>
+                    <span>الأرباح والخسائر</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('comparisons') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt ml-3"></i>
+                    <span>المقارنة اليدوية/المالية</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">الإدارة والعمليات</span>
+            
+            <li class="mb-2">
+                <a href="{{ url_for('products') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-box-open ml-3"></i>
+                    <span>إدارة المنتجات</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('inventory') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-boxes ml-3"></i>
+                    <span>الجرد والمخزون</span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ url_for('employees') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-users ml-3"></i>
+                    <span>إدارة الموظفين</span>
+                </a>
+            </li>
+
+            <hr class="border-gray-600 my-2 mx-4">
+            <span class="text-xs text-gray-400 px-4 uppercase font-semibold block">أدوات متقدمة</span>
+
+            <li class="mb-2">
+                <a href="{{ url_for('forecasts') }}" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <i class="fas fa-cogs ml-3"></i>
+                    <span>التوقعات والميزانية</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+    <!-- Main -->
+    <main class="mr-64 pt-20 p-6">
+        <h2 class="text-3xl font-bold text-gray-700 mb-4">المعاملات السابقة</h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">سجل المعاملات</h3>
+                <a href="{{ url_for('sales') }}"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-plus ml-2"></i> إضافة معاملة جديدة
+                </a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الرقم</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">النوع</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">التاريخ</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">التفاصيل</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">القيمة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTable" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+ <script>
+    async function loadTransactions(searchQuery = "") {
+        try {
+            const res = await fetch("/api/transactions");
+            if (!res.ok) {
+                console.error(" فشل تحميل المعاملات");
+                return;
+            }
+
+            const data = await res.json();
+
+            // تصفية المعاملات لتشمل فقط آخر 15 يوم
+            const fifteenDaysAgo = new Date();
+            fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
+
+            const recentData = data.filter(trx => {
+                const trxDate = new Date(trx.return_date || trx.date);
+                return trxDate >= fifteenDaysAgo;
+            });
+
+            // ترتيب حسب التاريخ الأحدث
+            recentData.sort((a, b) => new Date(b.return_date || b.date) - new Date(a.return_date || a.date));
+
+            // البحث حسب التفاصيل أو النوع أو الرقم
+            const filtered = recentData.filter(t =>
+                (t.name && t.name.includes(searchQuery)) ||
+                (t.type && t.type.includes(searchQuery)) ||
+                String(t.id).includes(searchQuery)
+            );
+
+            const tbody = document.getElementById("transactionsTable");
+            tbody.innerHTML = "";
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-6">لا توجد بيانات لعرضها</td></tr>`;
+                return;
+            }
+
+            // عرض النتائج
+            filtered.forEach(trx => {
+                let color = "";
+                let typeLabel = "";
+                switch (trx.type) {
+                    case "sale":
+                        color = "text-green-700";
+                        typeLabel = "عملية بيع";
+                        break;
+                    case "return":
+                        color = "text-yellow-700";
+                        typeLabel = "عملية مرتجع";
+                        break;
+                    case "inventory":
+                        color = "text-purple-700";
+                        typeLabel = "عملية جرد";
+                        break;
+                    case "debt":
+                        color = "text-red-700";
+                        typeLabel = "دين عميل";
+                        break;
+                    default:
+                        color = "text-gray-700";
+                        typeLabel = "عملية غير محددة";
+                }
+
+                const row = `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 text-sm text-gray-800">#${trx.id || "—"}</td>
+                        <td class="px-6 py-4 text-sm font-semibold ${color}">${typeLabel}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">${trx.return_date || trx.date || "—"}</td>
+                        <td class="px-6 py-4 text-sm text-gray-800">${trx.name || trx.client_name || trx.details || "—"}</td>
+                        <td class="px-6 py-4 text-sm text-gray-800">${trx.total || trx.amount || trx.cost_price || 0} ج.م</td>
+                    </tr>`;
+                tbody.insertAdjacentHTML("beforeend", row);
+            });
+        } catch (err) {
+            console.error("حدث خطأ أثناء تحميل المعاملات:", err);
+        }
+    }
+
+    // تأكد من أن عنصر البحث له id="searchInput"
+    const searchInput = document.querySelector('input[placeholder="بحث..."]');
+    if (searchInput) {
+        searchInput.addEventListener("input", e => {
+            loadTransactions(e.target.value);
+        });
+    }
+
+    // تحميل تلقائي عند فتح الصفحة
+    loadTransactions();
+</script>
+
+</body>
+
+</html>
